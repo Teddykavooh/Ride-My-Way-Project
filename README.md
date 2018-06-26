@@ -1,4 +1,4 @@
-[![Coverage Status](https://coveralls.io/repos/github/Teddykavooh/Ride-My-Way/badge.svg?branch=apiv1)](https://coveralls.io/github/Teddykavooh/Ride-My-Way?branch=apiv1)
+[![Coverage Status](https://coveralls.io/repos/github/Teddykavooh/Ride-My-Way-Project/badge.svg?branch=develop)](https://coveralls.io/github/Teddykavooh/Ride-My-Way-Project?branch=develop)
 [![Build Status](https://travis-ci.org/Teddykavooh/Ride-My-Way.svg?branch=apiv1)](https://travis-ci.org/Teddykavooh/Ride-My-Way)
 [![PEP8](https://img.shields.io/badge/code%20style-pep8-orange.svg)](https://www.python.org/dev/peps/pep-0008/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
