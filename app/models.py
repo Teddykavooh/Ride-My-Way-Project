@@ -36,16 +36,6 @@ class Rides:
         return {"txt": "Ride Requested"}
 
 
-# ride = Rides()
-# ride.post_a_ride("Mike", "Syoki - Nai", "6:30am")
-# print(ride.get_all_rides())
-# print(ride.get_a_ride(2))
-# print(ride.delete_a_ride(2))
-# print(ride.get_all_rides())
-# print(ride.edit(2, "Ian", "", ""))
-# print(ride.request_to_join_a_ride(2, "Junior Tedd", request=False))
-
-
 class Users:
     """Users Functionality"""
     users = {"Mueni Kavoo": {"email": "mueni@gmail.com", "password": generate_password_hash("01234"),
@@ -73,12 +63,3 @@ class Users:
     def delete_a_user(self, username):
         del self.users[username]
         return {"txt": "User Deleted"}
-
-
-# users_s = Users()
-# print(users_s.register("Anton Kavoo", "anton@yahoo.com", "0123", admin=True))
-# print(users_s.get_all_users())
-# print(users_s.login("Mike Mbulwa", "1234"))
-# print(users_s.delete_a_user("Mike Mbulwa"))
-# print(users_s.get_all_users())
-
