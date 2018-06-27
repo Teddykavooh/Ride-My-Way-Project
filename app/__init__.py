@@ -1,6 +1,8 @@
 from flask import Flask
 from flask_restplus import Api
 from instance.config import app_config
+from instance.config import config
+import psycopg2
 
 
 def create_app(config_name):
@@ -28,3 +30,35 @@ def create_app(config_name):
     from resources.admin import user_api
     api.add_namespace(user_api, path="/api/v1")
     return app
+
+
+def connect():
+    """ Connect to the PostgreSQL database server """
+    conn = None
+    try:
+        # read connection parameters
+        parameters = config()
+
+        # connect to the PostgreSQL server
+        print('Connecting to the PostgreSQL database...')
+        conn = psycopg2.connect(**parameters)
+
+        # create a cursor
+        cur = conn.cursor()
+
+        # execute a statement
+        print('PostgreSQL database version:')
+        cur.execute('SELECT version()')
+
+        # display the PostgreSQL database server version
+        db_version = cur.fetchone()
+        print(db_version)
+
+        # close the communication with the PostgreSQL
+        cur.close()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+            print('Database connection closed.')
