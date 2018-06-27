@@ -102,7 +102,7 @@ class Users:
         cur = conn.cursor()
         hidden = generate_password_hash(password=password)
         query = "INSERT INTO users (username, email, password, driver, admin) VALUES " \
-                "('" + username + "', '" + email + "', '" + hidden + "', '" + '' + "','" + '' + "' )"
+                "('" + username + "', '" + email + "', '" + hidden + "', '" + '0' + "','" + '0' + "' )"
         cur.execute(query)
         conn.commit()
         return {"txt": "User Registered"}
@@ -114,11 +114,12 @@ class Users:
         table_users = cur.fetchall()
         looping_db = {}
         for data_in_db in table_users:
-            my_data = data_in_db
-            looping_db[my_data] = {"username": my_data[0], "password": my_data[1]}
-            # print(my_data[0])
-        if username in my_data[0]:
-            if check_password_hash(my_data[1], password=password):
+            # global my_data
+            my_data = data_in_db[0]
+            looping_db[my_data] = {"password": data_in_db[1]}
+
+        if username in looping_db:
+            if check_password_hash(looping_db[username]["password"], password=password):
                 return {"txt": "Logged In"}
             else:
                 return {"txt": "Invalid Password"}
