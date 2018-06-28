@@ -14,10 +14,10 @@ class Users1 (Resource):
 
 class Users2(Resource):
     """Contains DELETE"""
-    def delete(self, username):
-        response = user.delete_a_user(username=username)
+    def delete(self, user_id):
+        response = user.delete_a_user(user_id=user_id)
         return response
 
 
 user_api.add_resource(Users1, "/all_users")
-user_api.add_resource(Users2, "/users/<username>")
+user_api.add_resource(Users2, "/users/<int:user_id>")

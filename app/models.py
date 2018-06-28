@@ -27,6 +27,7 @@ def create_tables():
         """
         CREATE TABLE requests (
                 request_id INTEGER PRIMARY KEY,
+                ride_id VARCHAR(50) NOT NULL,
                 passenger_name VARCHAR(255) NOT NULL,
                 pick_up_station VARCHAR(255) NOT NULL,
                 time VARCHAR(10) NOT NULL
@@ -56,47 +57,130 @@ def create_tables():
 class Rides:
     """Ride's Functionality"""
 
-    rides = {
-        1: {"driver": "Teddy Kavooh", "route": "Vota - Machakos", "time": "5:30am"}
-    }
+    # rides = {
+    #     1: {"driver": "Teddy Kavooh", "route": "Vota - Machakos", "time": "5:30am"}
+    # }
 
     def get_all_rides(self):
-        return self.rides
+        conn = None
+        try:
+            parameters = config()
+            conn = psycopg2.connect(**parameters)
+            cur = conn.cursor()
+            cur.execute("SELECT ride_id, driver, route, time FROM rides ORDER BY ride_id")
+            rides = cur.fetchall()
+            all_rides = {}
+            for ride in rides:
+                my_data = ride[0]
+                all_rides[my_data] = {"driver": ride[1], "route": ride[2], "time": ride[3]}
+            cur.close()
+            return all_rides
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conn is not None:
+                conn.close()
 
     def get_a_ride(self, ride_id):
-        return self.rides[ride_id]
+        conn = None
+        try:
+            parameters = config()
+            conn = psycopg2.connect(**parameters)
+            cur = conn.cursor()
+            cur.execute("SELECT * FROM rides WHERE ride_id = %s", (ride_id,))
+            rides = cur.fetchall()
+            all_rides = {}
+            for ride in rides:
+                my_data = ride[0]
+                all_rides[my_data] = {"driver": ride[1], "route": ride[2], "time": ride[3]}
+            cur.close()
+            return all_rides
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conn is not None:
+                conn.close()
 
     def post_a_ride(self, driver, route, time):
-        new_id = len(self.rides) + 1
-        self.rides[new_id] = {"driver": driver, "route": route, "time": time}
+        conn = psycopg2.connect("dbname=Ride-My-Way-Project user=postgres password=teddy0725143787")
+        cur = conn.cursor()
+        query = "INSERT INTO rides (driver, route, time) VALUES " \
+                "('" + driver + "', '" + route + "', '" + time + "')"
+        cur.execute(query)
+        conn.commit()
         return {"txt": "Ride Added"}
 
     def delete_a_ride(self, ride_id):
-        del self.rides[ride_id]
+        conn = None
+        try:
+            parameters = config()
+            conn = psycopg2.connect(**parameters)
+            cur = conn.cursor()
+            cur.execute("DELETE FROM rides WHERE ride_id = %s", (ride_id,))
+            conn.commit()
+            cur.close()
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conn is not None:
+                conn.close()
         return {"txt": "Ride Deleted"}
 
     def edit(self, ride_id, driver, route, time):
-        self.rides[ride_id] = {"driver": driver, "route": route, "time": time}
+        sql = """ UPDATE rides SET driver = %s, route = %s, time = %s WHERE ride_id = %s"""
+        conn = None
+        try:
+            parameters = config()
+            conn = psycopg2.connect(**parameters)
+            cur = conn.cursor()
+            cur.execute(sql, (driver, route, time, ride_id))
+            conn.commit()
+            cur.close()
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conn is not None:
+                conn.close()
         return {"txt": "Ride Edited"}
 
     def request_to_join_a_ride(self, ride_id, passenger_name, pick_up_station, time):
-        self.rides.get(ride_id)
-        request_ride[ride_id] = {"passenger_name": passenger_name, "pick_up_station": pick_up_station,
-                                 "time": time}
+        conn = psycopg2.connect("dbname=Ride-My-Way-Project user=postgres password=teddy0725143787")
+        cur = conn.cursor()
+        query = "INSERT INTO requests (ride_id, passenger_name, pick_up_station, time) VALUES " \
+                "('" + ride_id + "', '" + passenger_name + "', '" + pick_up_station + "', '" + time + "')"
+        cur.execute(query)
+        conn.commit()
         return {"txt": "Ride Requested"}
 
 
 class Users:
     """Users Functionality"""
-    users = {"Mueni Kavoo": {"email": "mueni@gmail.com", "password": generate_password_hash("01234"),
-                             "driver": False, "admin": True},
-             "Mike Mbulwa": {"email": "mike@gmail.com", "password": generate_password_hash("1234"),
-                             "driver": True, "admin": False}}
+    # users = {"Mueni Kavoo": {"email": "mueni@gmail.com", "password": generate_password_hash("01234"),
+    #                          "driver": False, "admin": True},
+    #          "Mike Mbulwa": {"email": "mike@gmail.com", "password": generate_password_hash("1234"),
+    #                          "driver": True, "admin": False}}
 
     def get_all_users(self):
-        return self.users
+        conn = None
+        try:
+            parameters = config()
+            conn = psycopg2.connect(**parameters)
+            cur = conn.cursor()
+            cur.execute("SELECT user_id, username, email, password FROM users ORDER BY user_id")
+            users = cur.fetchall()
+            all_users = {}
+            for user in users:
+                my_data = user[0]
+                all_users[my_data] = {"username": user[1], "email": user[2], "password": user[3]}
+            cur.close()
+            return all_users
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conn is not None:
+                conn.close()
 
-    def register(self, username, email, password, driver=False, admin=False):
+    def register(self, username, email, password):
         """Creates new user"""
         conn = psycopg2.connect("dbname=Ride-My-Way-Project user=postgres password=teddy0725143787")
         cur = conn.cursor()
@@ -126,6 +210,19 @@ class Users:
         else:
             return {"txt": "Invalid Username"}
 
-    # def delete_a_user(self, username):
-    #     del self.users[username]
-    #     return {"txt": "User Deleted"}
+    def delete_a_user(self, user_id):
+
+        conn = None
+        try:
+            parameters = config()
+            conn = psycopg2.connect(**parameters)
+            cur = conn.cursor()
+            cur.execute("DELETE FROM users WHERE user_id = %s", (user_id,))
+            conn.commit()
+            cur.close()
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conn is not None:
+                conn.close()
+        return {"txt": "User Deleted"}
