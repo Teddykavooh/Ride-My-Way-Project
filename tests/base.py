@@ -21,8 +21,8 @@ class ConfigTestCase(unittest.TestCase):
         ride.post_a_ride("Tedd", "Timba - Head", "5:30pm")
 
         user = Users()
-        user.register("Elneny Mohah", "mohah@gmail.com", "01234")
-        user.register("Honeybunch Kaindu", "kaindu@gmail.com", "1440")
+        user.register("Elneny Mohah", "mohah@gmail.com", "01234", True, True)
+        user.register("Honeybunch Kaindu", "kaindu@gmail.com", "1440", False, False)
 
     # def tearDown(self):
     #     """Deletes all test related data"""
@@ -33,7 +33,7 @@ class ConfigTestCase(unittest.TestCase):
     #         conn.commit()
 
 
-def create_tables(self):
+def create_tables():
         """ Create tables in the PostgreSQL database"""
         commands = (
             """

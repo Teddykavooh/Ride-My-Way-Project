@@ -6,7 +6,7 @@ user_api = Namespace("Users", description="All User Endpoints")
 user_register = user_api.model("Register A User", {"username": fields.String,
                                                    "email": fields.String,
                                                    "password": fields.String,
-                                                   "driver is either True Or False": fields.String})
+                                                   "driver is either True Or False": fields.Boolean})
 user_login = user_api.model("Login User", {"username": fields.String,
                                            "password": fields.String})
 

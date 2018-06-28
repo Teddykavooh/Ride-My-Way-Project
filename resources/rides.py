@@ -1,5 +1,6 @@
 from flask_restplus import Resource, Namespace, reqparse, fields
 from app.models import Rides
+from resources.authentication import driver_required
 
 rides = Rides()
 
@@ -20,6 +21,8 @@ class Rides(Resource):
         return response
 
     @ride_api.expect(ride_offer)
+    @ride_api.doc(security='apikey')
+    @driver_required
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument("driver", type=str, help="Driver must be provided", required=True,
@@ -39,6 +42,8 @@ class Ride(Resource):
         return response
 
     @ride_api.expect(ride_offer)
+    @ride_api.doc(security='apikey')
+    @driver_required
     def put(self, ride_id):
         parser = reqparse.RequestParser()
         parser.add_argument("driver", type=str, help="Driver must be provided", location=["json"],
@@ -52,6 +57,8 @@ class Ride(Resource):
                               time=args["time"])
         return response
 
+    @ride_api.doc(security='apikey')
+    @driver_required
     def delete(self, ride_id):
         response = rides.delete_a_ride(ride_id=ride_id)
         return response

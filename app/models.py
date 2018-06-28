@@ -1,5 +1,8 @@
+import os
 from werkzeug.security import generate_password_hash, check_password_hash
 import psycopg2
+import jwt
+import datetime
 from instance.config import config
 request_ride = {}
 
@@ -180,13 +183,13 @@ class Users:
             if conn is not None:
                 conn.close()
 
-    def register(self, username, email, password):
+    def register(self, username, email, password, driver=False, admin=False):
         """Creates new user"""
         conn = psycopg2.connect("dbname=Ride-My-Way-Project user=postgres password=teddy0725143787")
         cur = conn.cursor()
         hidden = generate_password_hash(password=password)
         query = "INSERT INTO users (username, email, password, driver, admin) VALUES " \
-                "('" + username + "', '" + email + "', '" + hidden + "', '" + '0' + "','" + '0' + "' )"
+                "('" + username + "', '" + email + "', '" + hidden + "', '" + '0' + "', '" + '1' + "')"
         cur.execute(query)
         conn.commit()
         return {"txt": "User Registered"}
@@ -194,17 +197,19 @@ class Users:
     def login(self, username, password):
         conn = psycopg2.connect("dbname=Ride-My-Way-Project user=postgres password=teddy0725143787")
         cur = conn.cursor()
-        cur.execute("SELECT username, password from users")
+        cur.execute("SELECT username, password, driver, admin from users")
         table_users = cur.fetchall()
         looping_db = {}
         for data_in_db in table_users:
-            # global my_data
             my_data = data_in_db[0]
-            looping_db[my_data] = {"password": data_in_db[1]}
-
+            looping_db[my_data] = {"password": data_in_db[1], "driver": data_in_db[2], "admin": data_in_db[3]}
         if username in looping_db:
             if check_password_hash(looping_db[username]["password"], password=password):
-                return {"txt": "Logged In"}
+                token = jwt.encode({"username": username, "driver": looping_db[username]["driver"],
+                                    'admin': looping_db[username]["admin"],
+                                    'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=2)},
+                                   os.getenv('SECRET_KEY'))
+                return {'token': token.decode('UTF-8')}
             else:
                 return {"txt": "Invalid Password"}
         else:
