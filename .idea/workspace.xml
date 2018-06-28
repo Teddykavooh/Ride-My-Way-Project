@@ -2,19 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c35cb779-ba2b-44fc-94c4-65f7e8571800" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/database.ini" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/authentication.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/run_my_tables.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.coverage" beforeDir="false" afterPath="$PROJECT_DIR$/.coverage" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/resources/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/rides.py" beforeDir="false" afterPath="$PROJECT_DIR$/resources/rides.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/users.py" beforeDir="false" afterPath="$PROJECT_DIR$/resources/users.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/base.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_rides.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_rides.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_users.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_users.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/__init__.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -25,18 +13,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="test_rides.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tests/test_rides.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="308">
-              <caret line="14" selection-start-line="14" selection-end-line="14" />
-              <folding>
-                <element signature="e#0#15#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="test_users.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tests/test_users.py">
           <provider selected="true" editor-type-id="text-editor">
@@ -116,13 +92,25 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="admin.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="admin.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/resources/admin.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="408">
               <caret line="21" column="4" lean-forward="true" selection-start-line="21" selection-start-column="4" selection-end-line="21" selection-end-column="4" />
               <folding>
                 <element signature="e#0#46#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="__init__.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/__init__.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="782">
+              <caret line="45" column="25" selection-start-line="45" selection-start-column="25" selection-end-line="45" selection-end-column="25" />
+              <folding>
+                <element signature="e#0#23#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -163,7 +151,6 @@
         <option value="$PROJECT_DIR$/env.bat" />
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/run.py" />
-        <option value="$PROJECT_DIR$/app/__init__.py" />
         <option value="$PROJECT_DIR$/resources/run_my_database.py" />
         <option value="$PROJECT_DIR$/database.ini" />
         <option value="$PROJECT_DIR$/instance/config.py" />
@@ -178,6 +165,7 @@
         <option value="$PROJECT_DIR$/resources/users.py" />
         <option value="$PROJECT_DIR$/app/models.py" />
         <option value="$PROJECT_DIR$/resources/admin.py" />
+        <option value="$PROJECT_DIR$/app/__init__.py" />
       </list>
     </option>
   </component>
@@ -198,6 +186,11 @@
             <path>
               <item name="Ride-My-Way-Project" type="b2602c69:ProjectViewProjectNode" />
               <item name="Ride-My-Way-Project" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Ride-My-Way-Project" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Ride-My-Way-Project" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -458,11 +451,19 @@
       <option name="project" value="LOCAL" />
       <updated>1530187963345</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="Tokens Implemented">
+      <created>1530223331138</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1530223331138</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="878" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2538004" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -525,7 +526,8 @@
     <MESSAGE value="Database Login Bug" />
     <MESSAGE value="Database Login Bug settled" />
     <MESSAGE value="Database Tests Handling" />
-    <option name="LAST_COMMIT_MESSAGE" value="Database Tests Handling" />
+    <MESSAGE value="Tokens Implemented" />
+    <option name="LAST_COMMIT_MESSAGE" value="Tokens Implemented" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -741,16 +743,6 @@
     <entry file="file://$PROJECT_DIR$/.travis.yml">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-517">
-          <caret line="4" column="15" selection-start-line="4" selection-start-column="15" selection-end-line="4" selection-end-column="15" />
-          <folding>
-            <element signature="e#0#23#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/database.ini">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="22">
@@ -873,6 +865,16 @@
           <caret line="21" column="4" lean-forward="true" selection-start-line="21" selection-start-column="4" selection-end-line="21" selection-end-column="4" />
           <folding>
             <element signature="e#0#46#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="782">
+          <caret line="45" column="25" selection-start-line="45" selection-start-column="25" selection-end-line="45" selection-end-column="25" />
+          <folding>
+            <element signature="e#0#23#0" expanded="true" />
           </folding>
         </state>
       </provider>
