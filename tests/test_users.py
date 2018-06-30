@@ -41,7 +41,7 @@ class UserTests(ConfigTestCase):
 
     def test_delete_a_user(self):
         """Test for deleting a user"""
-        response = self.client().delete("/api/v1/users/Elneny Mohah")
+        response = self.client().delete("/api/v1/users/2")
         self.assertEqual(response.status_code, 200)
 
 
