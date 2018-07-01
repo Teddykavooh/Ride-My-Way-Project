@@ -28,7 +28,7 @@ class ConfigTestCase(unittest.TestCase):
     def tearDown(self):
         """Deletes all test related data"""
         with self.app.app_context():
-            conn = psycopg2.connect("dbname=Ride-My-Way-Project user=postgres password=teddy0725143787")
+            conn = psycopg2.connect(os.getenv('Db'))
             cur = conn.cursor()
             cur.execute("DROP TABLE users, rides, requests;")
             conn.commit()
