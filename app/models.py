@@ -39,7 +39,7 @@ def create_tables():
     conn = None
     try:
         parameters = config()
-        conn = psycopg2.connect(**parameters)
+        conn = psycopg2.connect(os.getenv('Db'))
         cur = conn.cursor()
         for command in commands:
             cur.execute(command)
@@ -58,7 +58,7 @@ class Rides:
         conn = None
         try:
             parameters = config()
-            conn = psycopg2.connect(**parameters)
+            conn = psycopg2.connect(os.getenv('Db'))
             cur = conn.cursor()
             cur.execute("SELECT ride_id, driver, route, time FROM rides ORDER BY ride_id")
             rides = cur.fetchall()
@@ -78,7 +78,7 @@ class Rides:
         conn = None
         try:
             parameters = config()
-            conn = psycopg2.connect(**parameters)
+            conn = psycopg2.connect(os.getenv('Db'))
             cur = conn.cursor()
             cur.execute("SELECT * FROM rides WHERE ride_id = %s", (ride_id,))
             rides = cur.fetchall()
@@ -95,7 +95,7 @@ class Rides:
                 conn.close()
 
     def post_a_ride(self, driver, route, time):
-        conn = psycopg2.connect("dbname=Ride-My-Way-Project user=postgres password=teddy0725143787")
+        conn = psycopg2.connect(os.getenv('Db'))
         cur = conn.cursor()
         query = "INSERT INTO rides (driver, route, time) VALUES " \
                 "('" + driver + "', '" + route + "', '" + time + "')"
@@ -107,7 +107,7 @@ class Rides:
         conn = None
         try:
             parameters = config()
-            conn = psycopg2.connect(**parameters)
+            conn = psycopg2.connect(os.getenv('Db'))
             cur = conn.cursor()
             cur.execute("DELETE FROM rides WHERE ride_id = %s", (ride_id,))
             conn.commit()
@@ -124,7 +124,7 @@ class Rides:
         conn = None
         try:
             parameters = config()
-            conn = psycopg2.connect(**parameters)
+            conn = psycopg2.connect(os.getenv('Db'))
             cur = conn.cursor()
             cur.execute(sql, (driver, route, time, ride_id))
             conn.commit()
@@ -142,7 +142,7 @@ class Rides:
         conn = None
         try:
             parameters = config()
-            conn = psycopg2.connect(**parameters)
+            conn = psycopg2.connect(os.getenv('Db'))
             cur = conn.cursor()
             cur.execute(sql, (ride_id, passenger_name, pick_up_station, time))
             conn.commit()
@@ -161,7 +161,7 @@ class Users:
         conn = None
         try:
             parameters = config()
-            conn = psycopg2.connect(**parameters)
+            conn = psycopg2.connect(os.getenv('Db'))
             cur = conn.cursor()
             cur.execute("SELECT user_id, username, email, password FROM users ORDER BY user_id")
             users = cur.fetchall()
@@ -179,7 +179,7 @@ class Users:
 
     def register(self, username, email, password):
         """Creates new user"""
-        conn = psycopg2.connect("dbname=Ride-My-Way-Project user=postgres password=teddy0725143787")
+        conn = psycopg2.connect(os.getenv('Db'))
         cur = conn.cursor()
         hidden = generate_password_hash(password=password)
         query = "INSERT INTO users (username, email, password, driver, admin) VALUES "\
@@ -188,19 +188,8 @@ class Users:
         conn.commit()
         return {"txt": "User Registered"}
 
-    # def register(self, username, email, password, driver=False, admin=False):
-    #     """Creates new driver"""
-    #     conn = psycopg2.connect("dbname=Ride-My-Way-Project user=postgres password=teddy0725143787")
-    #     cur = conn.cursor()
-    #     hidden = generate_password_hash(password=password)
-    #     query = "INSERT INTO users (username, email, password, driver, admin) VALUES " \
-    #             "('" + username + "', '" + email + "', '" + hidden + "', '" + '1' + "', '" + '0' + "')"
-    #     cur.execute(query)
-    #     conn.commit()
-    #     return {"txt": "Driver Registered"}
-
     def login(self, username, password):
-        conn = psycopg2.connect("dbname=Ride-My-Way-Project user=postgres password=teddy0725143787")
+        conn = psycopg2.connect(os.getenv('Db'))
         cur = conn.cursor()
         cur.execute("SELECT username, password, driver, admin from users")
         table_users = cur.fetchall()
@@ -225,7 +214,7 @@ class Users:
         conn = None
         try:
             parameters = config()
-            conn = psycopg2.connect(**parameters)
+            conn = psycopg2.connect(os.getenv('Db'))
             cur = conn.cursor()
             cur.execute("DELETE FROM users WHERE user_id = %s", (user_id,))
             conn.commit()
