@@ -3,6 +3,7 @@ from flask_restplus import Api
 from instance.config import app_config
 from instance.config import config
 import psycopg2
+import os
 
 
 def create_app(config_name):
@@ -40,7 +41,7 @@ def connect():
     try:
         parameters = config()
         print('Connecting to the PostgreSQL database...')
-        conn = psycopg2.connect(**parameters)
+        conn = psycopg2.connect(os.getenv('Db'))
         cur = conn.cursor()
         print('PostgreSQL database version:')
         cur.execute('SELECT version()')
