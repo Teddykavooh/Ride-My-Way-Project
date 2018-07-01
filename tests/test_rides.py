@@ -33,20 +33,20 @@ class RideTests(ConfigTestCase):
     def test_edit(self):
         """Test API can edit rides"""
         ride = {"driver": "Denno Kindu", "route": "Mlosi - Junction", "time": "7:30pm"}
-        response = self.client().put("/api/v1/rides/2", data=json.dumps(ride), content_type='application/json')
-        self.assertEqual(response.status_code, 200)
+        response = self.client().put("/api/v1/rides/3", data=json.dumps(ride), content_type='application/json')
+        self.assertEqual(response.status_code, 202)
 
     def test_delete_a_ride(self):
         """Test for deleting a ride"""
         response = self.client().delete("/api/v1/rides/2")
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 202)
 
     def test_request_to_join_a_ride(self):
         """Test for requesting to join a ride"""
         ride = {"passenger_name": "Teddy Antony", "pick_up_station": "Kwa Ndeti", "time": "9:30am"}
-        response = self.client().post("/api/v1/rides/1/requests", data=json.dumps(ride),
+        response = self.client().post("/api/v1/rides/2/requests", data=json.dumps(ride),
                                       content_type='application/json')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
 
 
 if __name__ == '__main__':

@@ -13,42 +13,37 @@ def create_tables():
         """
         CREATE TABLE rides (
             ride_id SERIAL PRIMARY KEY,
-            driver VARCHAR(255)NOT NULL,
+            driver VARCHAR(255)NOT NULL UNIQUE,
             route VARCHAR(250) NOT NULL,
             time VARCHAR(10) NOT NULL
         )
         """,
         """ CREATE TABLE users (
                 user_id SERIAL PRIMARY KEY,
-                username VARCHAR(255) NOT NULL,
-                email VARCHAR(255) NOT NULL,
-                password VARCHAR(500) NOT NULL,
+                username VARCHAR(255) NOT NULL UNIQUE,
+                email VARCHAR(255) NOT NULL UNIQUE,
+                password VARCHAR(500) NOT NULL UNIQUE,
                 driver BOOLEAN NULL,
                 admin BOOLEAN NULL
                 )
         """,
         """
         CREATE TABLE requests (
-                request_id INTEGER PRIMARY KEY,
+                request_id SERIAL PRIMARY KEY,
                 ride_id VARCHAR(50) NOT NULL,
-                passenger_name VARCHAR(255) NOT NULL,
+                passenger_name VARCHAR(255) NOT NULL UNIQUE,
                 pick_up_station VARCHAR(255) NOT NULL,
                 time VARCHAR(10) NOT NULL
         )
         """)
     conn = None
     try:
-        # read the connection parameters
         parameters = config()
-        # connect to the PostgreSQL server
         conn = psycopg2.connect(**parameters)
         cur = conn.cursor()
-        # create table one by one
         for command in commands:
             cur.execute(command)
-        # close communication with the PostgreSQL database server
         cur.close()
-        # commit the changes
         conn.commit()
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
@@ -59,11 +54,6 @@ def create_tables():
 
 class Rides:
     """Ride's Functionality"""
-
-    # rides = {
-    #     1: {"driver": "Teddy Kavooh", "route": "Vota - Machakos", "time": "5:30am"}
-    # }
-
     def get_all_rides(self):
         conn = None
         try:
@@ -147,22 +137,26 @@ class Rides:
         return {"txt": "Ride Edited"}
 
     def request_to_join_a_ride(self, ride_id, passenger_name, pick_up_station, time):
-        conn = psycopg2.connect("dbname=Ride-My-Way-Project user=postgres password=teddy0725143787")
-        cur = conn.cursor()
-        query = "INSERT INTO requests (ride_id, passenger_name, pick_up_station, time) VALUES " \
-                "('" + ride_id + "', '" + passenger_name + "', '" + pick_up_station + "', '" + time + "')"
-        cur.execute(query)
-        conn.commit()
-        return {"txt": "Ride Requested"}
+        sql = """ INSERT INTO requests(ride_id, passenger_name, pick_up_station, time)
+         VALUES(%s, %s, %s, %s) RETURNING ride_id, passenger_name, pick_up_station, time;"""
+        conn = None
+        try:
+            parameters = config()
+            conn = psycopg2.connect(**parameters)
+            cur = conn.cursor()
+            cur.execute(sql, (ride_id, passenger_name, pick_up_station, time))
+            conn.commit()
+            cur.close()
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conn is not None:
+                conn.close()
+        return {"txt": "Ride Edited"}
 
 
 class Users:
     """Users Functionality"""
-    # users = {"Mueni Kavoo": {"email": "mueni@gmail.com", "password": generate_password_hash("01234"),
-    #                          "driver": False, "admin": True},
-    #          "Mike Mbulwa": {"email": "mike@gmail.com", "password": generate_password_hash("1234"),
-    #                          "driver": True, "admin": False}}
-
     def get_all_users(self):
         conn = None
         try:
@@ -183,16 +177,27 @@ class Users:
             if conn is not None:
                 conn.close()
 
-    def register(self, username, email, password, driver=False, admin=False):
+    def register(self, username, email, password):
         """Creates new user"""
         conn = psycopg2.connect("dbname=Ride-My-Way-Project user=postgres password=teddy0725143787")
         cur = conn.cursor()
         hidden = generate_password_hash(password=password)
-        query = "INSERT INTO users (username, email, password, driver, admin) VALUES " \
-                "('" + username + "', '" + email + "', '" + hidden + "', '" + '0' + "', '" + '1' + "')"
+        query = "INSERT INTO users (username, email, password, driver, admin) VALUES "\
+                "('" + username + "', '" + email + "', '" + hidden + "', '" + '0' + "', '" + '0' + "')"
         cur.execute(query)
         conn.commit()
         return {"txt": "User Registered"}
+
+    # def register(self, username, email, password, driver=False, admin=False):
+    #     """Creates new driver"""
+    #     conn = psycopg2.connect("dbname=Ride-My-Way-Project user=postgres password=teddy0725143787")
+    #     cur = conn.cursor()
+    #     hidden = generate_password_hash(password=password)
+    #     query = "INSERT INTO users (username, email, password, driver, admin) VALUES " \
+    #             "('" + username + "', '" + email + "', '" + hidden + "', '" + '1' + "', '" + '0' + "')"
+    #     cur.execute(query)
+    #     conn.commit()
+    #     return {"txt": "Driver Registered"}
 
     def login(self, username, password):
         conn = psycopg2.connect("dbname=Ride-My-Way-Project user=postgres password=teddy0725143787")

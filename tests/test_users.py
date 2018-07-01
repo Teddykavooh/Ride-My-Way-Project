@@ -21,28 +21,28 @@ class UserTests(ConfigTestCase):
 
     def test_login(self):
         """We are testing user login"""
-        user = {"username": "Mueni Kavoo", "password": "01234"}
+        user = {"username": "Mutisya Luke", "password": "5678"}
         response = self.client().post("/api/v1/users/login", data=json.dumps(user), content_type='application/json')
         self.assertEqual(response.status_code, 200)
 
     def test_invalid_username(self):
         """We are testing response to invalid username"""
-        user = {"username": "Mue Kavoo", "password": "01234"}
+        user = {"username": "Mue Kavoo", "password": "5678"}
         response = self.client().post("/api/v1/users/login", data=json.dumps(user), content_type='application/json')
         self.assertIn("Invalid Username", str(response.data))
         self.assertEqual(response.status_code, 200)
 
     def test_invalid_password(self):
         """We are testing response to invalid username"""
-        user = {"username": "Mueni Kavoo", "password": "34"}
+        user = {"username": "Elneny Mohah", "password": "34"}
         response = self.client().post("/api/v1/users/login", data=json.dumps(user), content_type='application/json')
         self.assertIn("Invalid Password", str(response.data))
         self.assertEqual(response.status_code, 200)
 
     def test_delete_a_user(self):
         """Test for deleting a user"""
-        response = self.client().delete("/api/v1/users/2")
-        self.assertEqual(response.status_code, 200)
+        response = self.client().delete("/api/v1/users/3")
+        self.assertEqual(response.status_code, 202)
 
 
 if __name__ == '__main__':

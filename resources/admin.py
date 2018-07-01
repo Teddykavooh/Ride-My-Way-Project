@@ -21,7 +21,7 @@ class Users2(Resource):
     # @admin_required
     def delete(self, user_id):
         response = user.delete_a_user(user_id=user_id)
-        return response
+        return response, 202
 
 
 user_api.add_resource(Users1, "/all_users")

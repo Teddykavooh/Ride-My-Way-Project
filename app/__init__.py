@@ -8,17 +8,19 @@ import psycopg2
 def create_app(config_name):
 
     app = Flask(__name__, instance_relative_config=True)
+    authorizations = {'apikey': {'type': 'apiKey', 'in': 'header', 'name': 'x-access-token'}}
 
-    api = Api(app=app, description="Ride-my App is a carpooling application that "
-                                   "provides drivers with the ability to"
-                                   " create ride oﬀers  and passengers  "
-                                   "to join available ride oﬀers.",
+    api = Api(app=app,
+              description="Ride-my App is a carpooling application that "
+                          "provides drivers with the ability to" 
+                          " create ride oﬀers  and passengers  "
+                          "to join available ride oﬀers.",
               title="Ride-My-Way",
               version='1.0',
-
+              authorizations=authorizations,
               doc='/api/v1/documentation'
               )
-
+    app.config['SWAGGER_UI_JSONEDITOR'] = True
     app.config.from_object(app_config[config_name])
     app.config.from_pyfile('config.py')
     app.url_map.strict_slashes = False

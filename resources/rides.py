@@ -39,7 +39,7 @@ class Rides(Resource):
 class Ride(Resource):
     def get(self, ride_id):
         response = rides.get_a_ride(ride_id=ride_id)
-        return response
+        return response, 200
 
     @ride_api.expect(ride_offer)
     @ride_api.doc(security='apikey')
@@ -55,13 +55,13 @@ class Ride(Resource):
         args = parser.parse_args()
         response = rides.edit(ride_id=ride_id, driver=args["driver"], route=args["route"],
                               time=args["time"])
-        return response
+        return response, 202
 
     @ride_api.doc(security='apikey')
     # @driver_required
     def delete(self, ride_id):
         response = rides.delete_a_ride(ride_id=ride_id)
-        return response
+        return response, 202
 
 
 class Request(Resource):
@@ -80,7 +80,7 @@ class Request(Resource):
         response = rides.request_to_join_a_ride(ride_id=ride_id, passenger_name=args["passenger_name"],
                                                 pick_up_station=args["pick_up_station"],
                                                 time=args["time"])
-        return response
+        return response, 201
 
 
 ride_api.add_resource(Rides, "/rides")
