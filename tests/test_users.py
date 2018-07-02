@@ -15,7 +15,7 @@ class UserTests(ConfigTestCase):
 
     def test_register(self):
         """We are testing user registration"""
-        user = {"username": "Mutisya Luke", "email": "mutisya@gmail.com", "password": "5678"}
+        user = {"username": "Mutisya Luke", "email": "mutisya@gmail.com", "password": "5678", "driver": False, "admin": False}
         response = self.client().post("/api/v1/users", data=json.dumps(user), content_type='application/json')
         self.assertEqual(response.status_code, 201)
 
