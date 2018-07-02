@@ -19,7 +19,7 @@ def create_app(config_name):
               title="Ride-My-Way",
               version='1.0',
               authorizations=authorizations,
-              doc='/api/v1/documentation'
+              doc='/api/v2/documentation'
               )
     app.config['SWAGGER_UI_JSONEDITOR'] = True
     app.config.from_object(app_config[config_name])
@@ -27,11 +27,11 @@ def create_app(config_name):
     app.url_map.strict_slashes = False
 
     from resources.rides import ride_api
-    api.add_namespace(ride_api, path="/api/v1")
+    api.add_namespace(ride_api, path="/api/v2")
     from resources.users import user_api
-    api.add_namespace(user_api, path="/api/v1")
+    api.add_namespace(user_api, path="/api/v2")
     from resources.admin import user_api
-    api.add_namespace(user_api, path="/api/v1")
+    api.add_namespace(user_api, path="/api/v2")
     return app
 
 

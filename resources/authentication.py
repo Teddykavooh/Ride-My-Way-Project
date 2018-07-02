@@ -21,7 +21,7 @@ def token_required(f):
 
         try:
             data = jwt.decode(token, Config.SECRET)
-        except:
+        except():
             return make_response(jsonify({"txt": "Please, provide a valid token."}), 401)
         return f(*args, **kwargs)
 
@@ -46,7 +46,7 @@ def driver_required(f):
         try:
             data = jwt.decode(token, Config.SECRET)
             driver = data['driver']
-        except:
+        except():
             return make_response(jsonify({
                 "txt": "Please, provide a valid token in the header"}), 401)
 
@@ -77,7 +77,7 @@ def admin_required(f):
         try:
             data = jwt.decode(token, Config.SECRET)
             admin = data['is_admin']
-        except:
+        except():
             return make_response(jsonify({"txt": "Please Register and Login"}), 401)
 
         if not admin:

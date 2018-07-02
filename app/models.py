@@ -13,16 +13,16 @@ def create_tables():
         """
         CREATE TABLE rides (
             ride_id SERIAL PRIMARY KEY,
-            driver VARCHAR(255)NOT NULL UNIQUE,
+            driver VARCHAR(255)NOT NULL,
             route VARCHAR(250) NOT NULL,
             time VARCHAR(10) NOT NULL
         )
         """,
         """ CREATE TABLE users (
                 user_id SERIAL PRIMARY KEY,
-                username VARCHAR(255) NOT NULL UNIQUE,
-                email VARCHAR(255) NOT NULL UNIQUE,
-                password VARCHAR(500) NOT NULL UNIQUE,
+                username VARCHAR(255) NOT NULL,
+                email VARCHAR(255) NOT NULL,
+                password VARCHAR(500) NOT NULL,
                 driver BOOLEAN NULL,
                 admin BOOLEAN NULL
                 )
@@ -31,7 +31,7 @@ def create_tables():
         CREATE TABLE requests (
                 request_id SERIAL PRIMARY KEY,
                 ride_id VARCHAR(50) NOT NULL,
-                passenger_name VARCHAR(255) NOT NULL UNIQUE,
+                passenger_name VARCHAR(255) NOT NULL,
                 pick_up_station VARCHAR(255) NOT NULL,
                 time VARCHAR(10) NOT NULL
         )
