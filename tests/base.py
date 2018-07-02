@@ -22,7 +22,7 @@ class ConfigTestCase(unittest.TestCase):
             ride.post_a_ride("Tedd", "Timba - Head", "5:30pm")
 
             user = Users()
-            user.register("Elneny Mohah", "mohah@gmail.com", "01234", True, True)
+            user.register("Elneny Mohah", "mohah@gmail.com", "01234", True, False)
             user.register("Honeybunch Kaindu", "kaindu@gmail.com", "1440", False, False)
 
     def tearDown(self):

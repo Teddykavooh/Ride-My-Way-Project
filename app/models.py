@@ -177,7 +177,7 @@ class Users:
             if conn is not None:
                 conn.close()
 
-    def register(self, username, email, password):
+    def register(self, username, email, password, driver, admin):
         """Creates new user"""
         conn = psycopg2.connect(os.getenv('Db'))
         cur = conn.cursor()
