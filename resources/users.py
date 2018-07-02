@@ -30,7 +30,7 @@ class Users(Resource):
         print(args)
 
         response = user.register(username=args["username"], email=args["email"],
-                                 password=args["password"])
+                                 password=args["password"], driver=args["driver"], admin=["admin"])
         return response, 201
 
 
