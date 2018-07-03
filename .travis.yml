@@ -11,7 +11,7 @@ before_script:
 
 script:
 #  - python -m pytest --cov-report term-missing --cov=resources
-  - pytest --cov=tests/
+  - pytest --cov=resources tests/
 after_success:
   - coveralls
 
