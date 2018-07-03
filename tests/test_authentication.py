@@ -7,19 +7,19 @@
 #
 #
 # class Authentication(ConfigTestCase):
-#     """This class represents auth test cases"""
+#     """This class represents authentication test cases"""
 #
 #     def test_missing_driver_token(self):
 #         """Test API for missing token"""
 #
 #         """missing driver token"""
 #         route = {"route": "Nakuru - Naivasha"}
-#         response = self.client().put('/api/v2/users/1', data=json.dumps(route), content_type='application/json')
+#         response = self.client().put('/api/v2/rides', data=json.dumps(route), content_type='application/json')
 #         self.assertEqual(response.status_code, 401)
 #         self.assertIn("Please sign-up and login", str(response.data))
 #
 #         """missing user token"""
-#         responce = self.client().get('/api/v2/rides/1', content_type='application/json')
+#         response = self.client().get('/api/v2/rides/1', content_type='application/json')
 #         self.assertEqual(response.status_code, 401)
 #         self.assertIn("Please sign-up and login", str(responce.data))
 #
@@ -39,7 +39,7 @@
 #         self.assertIn("kindly provide a valid token in the header", str(response.data))
 #
 #         """invalid user token token"""
-#         res = self.client().get('/api/v2/rides/1', content_type='application/json', headers=driver_header)
+#         response = self.client().get('/api/v2/rides/1', content_type='application/json', headers=driver_header)
 #         self.assertEqual(response.status_code, 401)
 #         self.assertIn("kindly provide a valid token in the header", str(response.data))
 #

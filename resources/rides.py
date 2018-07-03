@@ -1,6 +1,6 @@
 from flask_restplus import Resource, Namespace, reqparse, fields
 from app.models import Rides
-from resources.authentication import driver_required, token_required
+# from resources.authentication import driver_required, token_required
 
 rides = Rides()
 
@@ -22,7 +22,7 @@ class Rides(Resource):
 
     @ride_api.expect(ride_offer)
     @ride_api.doc(security='apikey')
-    @driver_required
+    # @driver_required
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument("driver", type=str, help="Driver must be provided", required=True,
@@ -43,7 +43,7 @@ class Ride(Resource):
 
     @ride_api.expect(ride_offer)
     @ride_api.doc(security='apikey')
-    @driver_required
+    # @driver_required
     def put(self, ride_id):
         parser = reqparse.RequestParser()
         parser.add_argument("driver", type=str, help="Driver must be provided", location=["json"],
@@ -58,7 +58,7 @@ class Ride(Resource):
         return response, 202
 
     @ride_api.doc(security='apikey')
-    @driver_required
+    # @driver_required
     def delete(self, ride_id):
         response = rides.delete_a_ride(ride_id=ride_id)
         return response, 202
@@ -68,7 +68,7 @@ class Request(Resource):
     """Contains POST for user ride requests"""
 
     @ride_api.expect(ride_request)
-    @token_required
+    # @token_required
     def post(self, ride_id):
         parser = reqparse.RequestParser()
         parser.add_argument("passenger_name", type=str, help="Your name must be provided.",

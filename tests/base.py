@@ -3,9 +3,9 @@ import sys  # fix import errors
 from app import create_app
 import os
 from app.models import Rides, Users, create_tables
-from werkzeug.security import generate_password_hash
+# from werkzeug.security import generate_password_hash
 import psycopg2
-import json
+# import json
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
@@ -26,7 +26,7 @@ class ConfigTestCase(unittest.TestCase):
             user = Users()
             user.register("Elneny Mohah", "mohah@gmail.com", "01234", True, False)
             user.register("Honeybunch Kaindu", "kaindu@gmail.com", "1440", False, False)
-
+            #
             # """Admin Creation"""
             # conn = psycopg2.connect(os.getenv('Db'))
             # cur = conn.cursor()
@@ -59,7 +59,7 @@ class ConfigTestCase(unittest.TestCase):
             #
             # """Getting Tokens"""
             # """User Login"""
-            # test_user= {"username": "Inamoto Kagawa", "password": "123"}
+            # test_user = {"username": "Inamoto Kagawa", "password": "123"}
             # test_driver = {"username": "Kesuke Honda", "password": "456"}
             # test_admin = {"username": "Teddykavooh", "password": "teddy0725143787"}
             #
