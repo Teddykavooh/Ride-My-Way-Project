@@ -29,7 +29,7 @@ def token_required(f):
 
 
 def driver_required(f):
-    """Checks for authenticated admins with valid token in the header"""
+    """Checks for authenticated driver with valid token in the header"""
 
     @wraps(f)
     def decorated(*args, **kwargs):
@@ -52,7 +52,7 @@ def driver_required(f):
 
         if not driver:
             return make_response(jsonify({
-                "txt": "You are not authorized to perform this function as a non-driver user"}), 401)
+                "txt": "You are not authorized to perform this function"}), 401)
 
         return f(*args, **kwargs)
 
@@ -76,13 +76,13 @@ def admin_required(f):
 
         try:
             data = jwt.decode(token, Config.SECRET)
-            admin = data['is_admin']
+            admin = data['admin']
         except():
-            return make_response(jsonify({"txt": "Please Register and Login"}), 401)
+            return make_response(jsonify({"Please, provide a valid token in the header"}), 401)
 
         if not admin:
             return make_response(
-                jsonify({"txt": "You are not authorized to perform this function as a non-admin user"}), 401)
+                jsonify({"txt": "Sorry, You are not authorized to perform this function"}), 401)
 
         return f(*args, **kwargs)
 

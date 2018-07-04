@@ -1,6 +1,6 @@
 from flask_restplus import Resource, Namespace
 from app.models import Users
-# from resources.authentication import admin_required
+from resources.authentication import admin_required
 
 user = Users()
 user_api = Namespace("Admin", description="All Admin Endpoints")
@@ -9,7 +9,7 @@ user_api = Namespace("Admin", description="All Admin Endpoints")
 class Users1 (Resource):
     """Contains GET"""
     @user_api.doc(security='apikey')
-    # @admin_required
+    @admin_required
     def get(self):
         response = user.get_all_users()
         return response, 200
@@ -18,7 +18,7 @@ class Users1 (Resource):
 class Users2(Resource):
     """Contains DELETE"""
     @user_api.doc(security='apikey')
-    # @admin_required
+    @admin_required
     def delete(self, user_id):
         response = user.delete_a_user(user_id=user_id)
         return response, 202

@@ -7,7 +7,7 @@ user_api = Namespace("Users", description="All User Endpoints")
 user_register = user_api.model("Register A User", {"username": fields.String,
                                                    "email": fields.String,
                                                    "password": fields.String,
-                                                   "driver": fields.Boolean(default=False)})
+                                                   "driver": fields.String})
 user_login = user_api.model("Login User", {"username": fields.String,
                                            "password": fields.String})
 
@@ -23,11 +23,8 @@ class Users(Resource):
                             required=True)
         parser.add_argument("password", type=str, help="Password must be provided",
                             location=["json"], required=True)
-        parser.add_argument("driver", type=bool, required=False, location=["json"])
-        parser.add_argument("admin", type=bool, help="Fill if you are an admin", location=["json"],
-                            required=False)
+        parser.add_argument("driver", type=str, required=False, location=["json"])
         args = parser.parse_args()
-        print(args)
 
         response = user.register(username=args["username"], email=args["email"],
                                  password=args["password"], driver=args["driver"], admin=["admin"])

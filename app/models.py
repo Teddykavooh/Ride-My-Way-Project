@@ -183,7 +183,7 @@ class Users:
         cur = conn.cursor()
         hidden = generate_password_hash(password=password)
         query = "INSERT INTO users (username, email, password, driver, admin) VALUES "\
-                "('" + username + "', '" + email + "', '" + hidden + "', '" + '0' + "', '" + '0' + "')"
+                "('" + username + "', '" + email + "', '" + hidden + "', '" + driver + "', '" + '0' + "')"
         cur.execute(query)
         conn.commit()
         return {"txt": "User Registered"}
@@ -200,10 +200,10 @@ class Users:
         if username in looping_db:
             if check_password_hash(looping_db[username]["password"], password=password):
                 token = jwt.encode({"username": username, "driver": looping_db[username]["driver"],
-                                    'admin': looping_db[username]["admin"],
-                                    'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=2)},
+                                    "admin": looping_db[username]["admin"],
+                                    "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=2)},
                                    os.getenv('SECRET_KEY'))
-                return {'token': token.decode('UTF-8')}
+                return {"token": token.decode('UTF-8')}
             else:
                 return {"txt": "Invalid Password"}
         else:

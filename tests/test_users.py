@@ -10,13 +10,13 @@ class UserTests(ConfigTestCase):
     """This class contains UserTests """
     def test_get_all_users(self):
         """We are testing if we can get all users"""
-        response = self.client().get("/api/v2/all_users")
+        response = self.client().get("/api/v2/all_users", headers=self.admin_header)
         self.assertEqual(response.status_code, 200)
 
     def test_register(self):
         """We are testing user registration"""
-        user = {"username": "Mutisya Luke", "email": "mutisya@gmail.com", "password": "5678", "driver": False,
-                "admin": False}
+        user = {"username": "Mutisya Luke", "email": "mutisya@gmail.com", "password": "5678", "driver": "TRUE",
+                "admin": "TRUE"}
         response = self.client().post("/api/v2/users", data=json.dumps(user), content_type='application/json')
         self.assertEqual(response.status_code, 201)
 
@@ -42,7 +42,7 @@ class UserTests(ConfigTestCase):
 
     def test_delete_a_user(self):
         """Test for deleting a user"""
-        response = self.client().delete("/api/v2/users/3")
+        response = self.client().delete("/api/v2/users/3", headers=self.admin_header)
         self.assertEqual(response.status_code, 202)
 
 

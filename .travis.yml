@@ -10,8 +10,8 @@ before_script:
   - psql -c 'create database travis_tests;' -U postgres
 
 script:
-#  - python -m pytest --cov-report term-missing --cov=resources
-  - pytest --cov=resources tests/
+  - python -m pytest --cov-report term-missing --cov=resources
+#  - pytest --cov=resources tests/
 after_success:
   - coveralls
 
