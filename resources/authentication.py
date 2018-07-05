@@ -33,7 +33,7 @@ def driver_required(f):
 
     @wraps(f)
     def decorated(*args, **kwargs):
-        """validate token provided and ensures the user is an admin"""
+        """validate token provided and ensures the user is an driver"""
 
         token = None
 
