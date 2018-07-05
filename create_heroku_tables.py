@@ -1,7 +1,6 @@
 from werkzeug.security import generate_password_hash
 import psycopg2
 from instance.config import config
-request_ride = {}
 
 
 def create_tables():
