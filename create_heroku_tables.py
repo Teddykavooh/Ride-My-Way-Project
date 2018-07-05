@@ -1,9 +1,54 @@
-from app.models import create_tables
-import psycopg2
+import os
 from werkzeug.security import generate_password_hash
+import psycopg2
+from instance.config import config
+request_ride = {}
 
 
-create_tables()
+def create_tables():
+    """ Create tables in the PostgreSQL database"""
+    commands = (
+        """
+        CREATE TABLE rides (
+            ride_id SERIAL PRIMARY KEY,
+            driver VARCHAR(255)NOT NULL,
+            route VARCHAR(250) NOT NULL,
+            time VARCHAR(10) NOT NULL
+        )
+        """,
+        """ CREATE TABLE users (
+                user_id SERIAL PRIMARY KEY,
+                username VARCHAR(255) NOT NULL UNIQUE,
+                email VARCHAR(255) NOT NULL UNIQUE,
+                password VARCHAR(500) NOT NULL UNIQUE,
+                driver BOOLEAN NULL,
+                admin BOOLEAN NULL
+                )
+        """,
+        """
+        CREATE TABLE requests (
+                request_id SERIAL PRIMARY KEY,
+                ride_id VARCHAR(50) NOT NULL,
+                passenger_name VARCHAR(255) NOT NULL UNIQUE,
+                pick_up_station VARCHAR(255) NOT NULL,
+                time VARCHAR(10) NOT NULL
+        )
+        """)
+    conn = None
+    try:
+        parameters = config()
+        conn = psycopg2.connect(os.getenv('Db'))
+        cur = conn.cursor()
+        for command in commands:
+            cur.execute(command)
+        cur.close()
+        conn.commit()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+
 
 """Creates new user"""
 conn = psycopg2.connect("dbname=deijb3ntfbebui user=lqwuoejnuwiuwj"
