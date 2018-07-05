@@ -50,6 +50,9 @@ def create_tables():
         if conn is not None:
             conn.close()
 
+    if __name__ == '__main__':
+        create_tables()
+
 
 """Creates new user"""
 conn = psycopg2.connect("dbname=deijb3ntfbebui user=lqwuoejnuwiuwj"
