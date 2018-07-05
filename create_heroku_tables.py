@@ -3,8 +3,7 @@ import psycopg2
 from werkzeug.security import generate_password_hash
 
 
-if __name__ == '__main__':
-    create_tables()
++create_tables()
 
 """Creates new user"""
 conn = psycopg2.connect("dbname=deijb3ntfbebui user=lqwuoejnuwiuwj"
