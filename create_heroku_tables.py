@@ -1,4 +1,3 @@
-import os
 from werkzeug.security import generate_password_hash
 import psycopg2
 from instance.config import config
@@ -34,10 +33,13 @@ def create_tables():
                 time VARCHAR(10) NOT NULL
         )
         """)
+
     conn = None
     try:
         parameters = config()
-        conn = psycopg2.connect(os.getenv('Db'))
+        conn = psycopg2.connect("dbname=deijb3ntfbebui user=lqwuoejnuwiuwj"
+                                " password=5e13ac0dda86f10cd5b079742b51f52e0ac970d1adba23e67e221d018ac14c68"
+                                " host=ec2-54-83-12-150.compute-1.amazonaws.com")
         cur = conn.cursor()
         for command in commands:
             cur.execute(command)
