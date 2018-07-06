@@ -20,6 +20,14 @@ class UserTests(ConfigTestCase):
         response = self.client().post("/api/v2/users", data=json.dumps(user), content_type='application/json')
         self.assertEqual(response.status_code, 201)
 
+    def test_already_register(self):
+        """We are testing user registration occured"""
+        user = {"username": "Elneny Mohah", "email": "mohah@gmail.com", "password": "5678", "driver": "TRUE",
+                "admin": "TRUE"}
+        response = self.client().post("/api/v2/users", data=json.dumps(user), content_type='application/json')
+        self.assertIn("User cannot be registered due to unique similarities", str(response.data))
+        self.assertEqual(response.status_code, 201)
+
     def test_login(self):
         """We are testing user login"""
         user = {"username": "Mutisya Luke", "password": "5678"}
@@ -43,6 +51,12 @@ class UserTests(ConfigTestCase):
     def test_delete_a_user(self):
         """Test for deleting a user"""
         response = self.client().delete("/api/v2/users/3", headers=self.admin_header)
+        self.assertEqual(response.status_code, 202)
+
+    def test_delete_non_existence_user(self):
+        """We are testing response to deleting user not in database"""
+        response = self.client().delete("/api/v2/users/99", headers=self.admin_header)
+        self.assertIn("User Not Available", str(response.data))
         self.assertEqual(response.status_code, 202)
 
 

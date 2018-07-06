@@ -33,6 +33,13 @@ class Rides(Resource):
                             required=True,)
         args = parser.parse_args()
         response = rides.post_a_ride(driver=args["driver"], route=args["route"], time=args["time"])
+
+        if args["driver"] == "":
+            return {"txt": "Driver must be filled"}
+        if args["route"] == "":
+            return {"txt": "Route must be filled"}
+        if args["time"] == "":
+            return {"txt": "Time must be filled"}
         return response, 201
 
 
@@ -57,6 +64,13 @@ class Ride(Resource):
         args = parser.parse_args()
         response = rides.edit(ride_id=ride_id, driver=args["driver"], route=args["route"],
                               time=args["time"])
+
+        if args["driver"] == "":
+            return {"txt": "Driver must be filled"}
+        if args["route"] == "":
+            return {"txt": "Route must be filled"}
+        if args["time"] == "":
+            return {"txt": "Time must be filled"}
         return response, 202
 
     @ride_api.doc(security='apikey')
@@ -84,6 +98,13 @@ class Request(Resource):
         response = rides.request_to_join_a_ride(ride_id=ride_id, passenger_name=args["passenger_name"],
                                                 pick_up_station=args["pick_up_station"],
                                                 time=args["time"])
+
+        if args["passenger_name"] == "":
+            return {"txt": "Passenger must be filled"}
+        if args["pick_up_station"] == "":
+            return {"txt": "Pick up station must be filled"}
+        if args["time"] == "":
+            return {"txt": "Time must be filled"}
         return response, 201
 
 
