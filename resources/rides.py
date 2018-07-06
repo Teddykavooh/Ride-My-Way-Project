@@ -1,5 +1,6 @@
 from flask_restplus import Resource, Namespace, reqparse, fields
 from app.models import Rides
+from resources.authentication import driver_required, token_required
 
 rides = Rides()
 
@@ -20,6 +21,8 @@ class Rides(Resource):
         return response
 
     @ride_api.expect(ride_offer)
+    @ride_api.doc(security='apikey')
+    @driver_required
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument("driver", type=str, help="Driver must be provided", required=True,
@@ -30,15 +33,26 @@ class Rides(Resource):
                             required=True,)
         args = parser.parse_args()
         response = rides.post_a_ride(driver=args["driver"], route=args["route"], time=args["time"])
+
+        if args["driver"] == "":
+            return {"txt": "Driver must be filled"}
+        if args["route"] == "":
+            return {"txt": "Route must be filled"}
+        if args["time"] == "":
+            return {"txt": "Time must be filled"}
         return response, 201
 
 
 class Ride(Resource):
+    @ride_api.doc(security='apikey')
+    @token_required
     def get(self, ride_id):
         response = rides.get_a_ride(ride_id=ride_id)
-        return response
+        return response, 200
 
     @ride_api.expect(ride_offer)
+    @ride_api.doc(security='apikey')
+    @driver_required
     def put(self, ride_id):
         parser = reqparse.RequestParser()
         parser.add_argument("driver", type=str, help="Driver must be provided", location=["json"],
@@ -50,17 +64,28 @@ class Ride(Resource):
         args = parser.parse_args()
         response = rides.edit(ride_id=ride_id, driver=args["driver"], route=args["route"],
                               time=args["time"])
-        return response
 
+        if args["driver"] == "":
+            return {"txt": "Driver must be filled"}
+        if args["route"] == "":
+            return {"txt": "Route must be filled"}
+        if args["time"] == "":
+            return {"txt": "Time must be filled"}
+        return response, 202
+
+    @ride_api.doc(security='apikey')
+    @driver_required
     def delete(self, ride_id):
         response = rides.delete_a_ride(ride_id=ride_id)
-        return response
+        return response, 202
 
 
 class Request(Resource):
     """Contains POST for user ride requests"""
 
     @ride_api.expect(ride_request)
+    @ride_api.doc(security='apikey')
+    @token_required
     def post(self, ride_id):
         parser = reqparse.RequestParser()
         parser.add_argument("passenger_name", type=str, help="Your name must be provided.",
@@ -73,7 +98,14 @@ class Request(Resource):
         response = rides.request_to_join_a_ride(ride_id=ride_id, passenger_name=args["passenger_name"],
                                                 pick_up_station=args["pick_up_station"],
                                                 time=args["time"])
-        return response
+
+        if args["passenger_name"] == "":
+            return {"txt": "Passenger must be filled"}
+        if args["pick_up_station"] == "":
+            return {"txt": "Pick up station must be filled"}
+        if args["time"] == "":
+            return {"txt": "Time must be filled"}
+        return response, 201
 
 
 ride_api.add_resource(Rides, "/rides")
