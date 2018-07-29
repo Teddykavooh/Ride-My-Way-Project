@@ -1,4 +1,5 @@
 import os
+from configparser import ConfigParser
 
 
 class Config(object):
@@ -35,3 +36,16 @@ app_config = {"development": DevelopmentConfig,
               'staging': StagingConfig,
               'production': ProductionConfig
               }
+
+
+def config(filename='database.ini', section='postgresql'):
+    parser = ConfigParser()
+    parser.read(filename)
+    db = {}
+    if parser.has_section(section):
+        parameters = parser.items(section)
+        for parameter in parameters:
+            db[parameter[0]] = parameter[1]
+    else:
+        raise Exception('Section {0} not found in the {1} file'.format(section, filename))
+    return db
