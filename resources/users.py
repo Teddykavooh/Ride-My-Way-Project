@@ -7,7 +7,7 @@ user_api = Namespace("Users", description="All User Endpoints")
 user_register = user_api.model("Register A User", {"username": fields.String,
                                                    "email": fields.String,
                                                    "password": fields.String,
-                                                   "driver": fields.Boolean})
+                                                   "driver": fields.String})
 user_login = user_api.model("Login User", {"username": fields.String,
                                            "password": fields.String})
 
@@ -29,13 +29,13 @@ class Users(Resource):
         response = user.register(username=args["username"], email=args["email"],
                                  password=args["password"], driver=args["driver"], admin=["admin"])
         if args["username"] == "":
-            return {"txt": "Username must be filled"}
+            return {"txt": "Username must be filled"}, 400
         if args["email"] == "":
-            return {"txt": "E-Mail must be filled"}
+            return {"txt": "E-Mail must be filled"}, 400
         if args["password"] == "":
-            return {"txt": "Password must be filled"}
-        if args["driver"] == "" or not bool:
-            return {"txt": "Driver must be filled"}
+            return {"txt": "Password must be filled"}, 400
+        if args["driver"] == "":
+            return {"txt": "Driver must be filled"}, 400
         return response, 201
 
 

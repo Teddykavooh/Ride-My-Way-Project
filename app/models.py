@@ -34,7 +34,8 @@ def create_tables():
                 ride_id VARCHAR(50) NOT NULL,
                 passenger_name VARCHAR(255) NOT NULL UNIQUE,
                 pick_up_station VARCHAR(255) NOT NULL,
-                time VARCHAR(10) NOT NULL
+                time VARCHAR(10) NOT NULL,
+                response VARCHAR(10)
         )
         """)
     conn = None
@@ -151,6 +152,33 @@ class Rides:
         else:
             return {"txt": "Ride does not exist"}
 
+    def accept_or_reject_a_ride_request(self, ride_id, request_id, response):
+        responses = ["Accepted", "Rejected"]
+        if response in responses:
+            conn = psycopg2.connect(os.getenv('Db'))
+            cur = conn.cursor()
+            cur.execute("SELECT * FROM requests")
+            requests = cur.fetchall()
+            all_requests = {}
+            for request in requests:
+                my_data = request[0]
+                all_requests[my_data] = {"ride_id": request[1], "passenger_name": request[2],
+                                         "pick_up_station": request[3],
+                                         "time": request[4]}
+            if ride_id in all_requests:
+                if request_id in all_requests:
+                    sql = """ UPDATE requests SET response = %s, ride_id = %s WHERE request_id= %s"""
+                    cur.execute(sql, (response, ride_id, request_id))
+                    conn.commit()
+                    cur.close()
+                    return {"txt": "Response to request given"}
+                else:
+                    return {"txt": "Invalid Ride Request"}
+            else:
+                return {"txt": "Ride does not exist"}
+        else:
+            return {"txt": "Response should be either Accepted or Rejected"}, 400
+
 
 class Users:
     """Users Functionality"""
@@ -172,25 +200,29 @@ class Users:
 
     def register(self, username, email, password, driver, admin):
         """Creates new user"""
-        conn = psycopg2.connect(os.getenv('Db'))
-        cur = conn.cursor()
-        cur.execute("SELECT email from users")
-        conn.commit()
-        table_users = cur.fetchall()
-        looping_db = {}
-        for data_in_db in table_users:
-            my_data = data_in_db[0]
-            looping_db[my_data] = {}
-        if email in looping_db:
-            return {"txt": "User cannot be registered due to unique similarities"}
-        else:
-            hidden = generate_password_hash(password=password)
-            query = "INSERT INTO users (username, email, password, driver, admin) VALUES "\
-                    "('" + username + "', '" + email + "', '" + hidden + "', '" + driver + "', '" + '0' + "')"
-            cur.execute(query)
+        driver_mode = ["True", "False"]
+        if driver in driver_mode:
+            conn = psycopg2.connect(os.getenv('Db'))
+            cur = conn.cursor()
+            cur.execute("SELECT email from users")
             conn.commit()
-            cur.close()
-            return {"txt": "User Registered"}
+            table_users = cur.fetchall()
+            looping_db = {}
+            for data_in_db in table_users:
+                my_data = data_in_db[0]
+                looping_db[my_data] = {}
+            if email in looping_db:
+                return {"txt": "User cannot be registered due to unique similarities"}
+            else:
+                hidden = generate_password_hash(password=password)
+                query = "INSERT INTO users (username, email, password, driver, admin) VALUES "\
+                        "('" + username + "', '" + email + "', '" + hidden + "', '" + driver + "', '" + '0' + "')"
+                cur.execute(query)
+                conn.commit()
+                cur.close()
+                return {"txt": "User Registered"}
+        else:
+            return {"txt": "Driver must either be True or False"}, 400
 
     def login(self, username, password):
         conn = psycopg2.connect(os.getenv('Db'))

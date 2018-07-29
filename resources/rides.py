@@ -13,6 +13,8 @@ ride_request = ride_api.model("Request To Join A Ride", {"passenger_name": field
                                                          "pick_up_station": fields.String,
                                                          "time": fields.String})
 
+request_response = ride_api.model("Respond To A Ride Request", {"response": fields.String})
+
 
 class Rides(Resource):
     """Contains GET and POST"""
@@ -108,6 +110,26 @@ class Request(Resource):
         return response, 201
 
 
+class Response(Resource):
+    """Contains Response to ride requests"""
+
+    @ride_api.expect(request_response)
+    @ride_api.doc(security='apikey')
+    @driver_required
+    def put(self,  ride_id, request_id):
+        parser = reqparse.RequestParser()
+        parser.add_argument("response", type=str, help="Response must be provided", location=["json"],
+                            required=True)
+        args = parser.parse_args()
+        response2 = rides.accept_or_reject_a_ride_request(ride_id=ride_id, request_id=request_id,
+                                                          response=args["response"])
+        if args["response"] == "":
+            return {"txt": "Response must be filled"}
+        else:
+            return response2, 202
+
+
 ride_api.add_resource(Rides, "/rides")
 ride_api.add_resource(Ride, "/rides/<int:ride_id>")
 ride_api.add_resource(Request, "/rides/<int:ride_id>/requests")
+ride_api.add_resource(Response, "/rides/<int:ride_id>/requests/<int:request_id>")

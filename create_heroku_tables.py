@@ -7,7 +7,8 @@ from werkzeug.security import generate_password_hash
 create_tables()
 
 
-"""Creates new user"""
+"""Creates Admin On Default"""
+
 conn = psycopg2.connect(os.getenv('Db'))
 cur = conn.cursor()
 hidden = generate_password_hash("teddy0725143787")

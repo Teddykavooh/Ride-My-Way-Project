@@ -24,8 +24,8 @@ class ConfigTestCase(unittest.TestCase):
             ride.post_a_ride("Tedd", "Timba - Head", "5:30pm")
 
             user = Users()
-            user.register("Elneny Mohah", "mohah@gmail.com", "01234", "TRUE", False)
-            user.register("Honeybunch Kaindu", "kaindu@gmail.com", "1440", "FALSE", False)
+            user.register("Elneny Mohah", "mohah@gmail.com", "01234", "True", False)
+            user.register("Honeybunch Kaindu", "kaindu@gmail.com", "1440", "False", False)
 
             """Admin Creation"""
             conn = psycopg2.connect(os.getenv('Db'))
