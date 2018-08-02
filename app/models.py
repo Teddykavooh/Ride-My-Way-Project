@@ -142,15 +142,18 @@ class Rides:
         for ride in rides:
             my_data = ride[0]
             all_rides[my_data] = {"driver": ride[1], "route": ride[2], "time": ride[3]}
-        if ride_id in all_rides:
-            sql = """ INSERT INTO requests(ride_id, passenger_name, pick_up_station, time)
-             VALUES(%s, %s, %s, %s) RETURNING ride_id, passenger_name, pick_up_station, time;"""
-            cur.execute(sql, (ride_id, passenger_name, pick_up_station, time))
-            conn.commit()
-            cur.close()
-            return {"txt": "Ride Requested"}
-        else:
-            return {"txt": "Ride does not exist"}
+            # if my_data in all_rides:
+            #     return {"txt": "You can't request more rides"}
+            # else:
+            if ride_id in all_rides:
+                sql = """ INSERT INTO requests(ride_id, passenger_name, pick_up_station, time)
+                 VALUES(%s, %s, %s, %s) RETURNING ride_id, passenger_name, pick_up_station, time;"""
+                cur.execute(sql, (ride_id, passenger_name, pick_up_station, time))
+                conn.commit()
+                cur.close()
+                return {"txt": "Ride Requested"}
+            else:
+                return {"txt": "Ride does not exist"}
 
     def accept_or_reject_a_ride_request(self, ride_id, request_id, response):
         responses = ["Accepted", "Rejected"]
@@ -177,7 +180,27 @@ class Rides:
             else:
                 return {"txt": "Ride does not exist"}
         else:
-            return {"txt": "Response should be either Accepted or Rejected"}, 400
+            return {"txt": "Response should be either Accepted or Rejected"}
+
+    def get_all_requests(self, ride_id):
+        conn = psycopg2.connect(os.getenv('Db'))
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM requests ")
+        requests = cur.fetchall()
+        all_rides = {}
+        for request in requests:
+            my_data = request[0]
+            my_ride = request[1]
+            all_rides[my_data] = {"ride_id": request[1], "passenger_name": request[2], "pick_up_station": request[3],
+                                  "time": request[4], "response": request[5]}
+            if ride_id == my_ride:
+                conn.commit()
+                cur.close()
+                return all_rides
+            if all_rides == {}:
+                return {"txt": "No requests are available"}
+            else:
+                return {"txt": "Error Occurred"}
 
 
 class Users:
@@ -240,7 +263,8 @@ class Users:
                                     "admin": looping_db[username]["admin"],
                                     "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=2)},
                                    os.getenv('SECRET_KEY'))
-                return {"token": token.decode('UTF-8')}
+                return {"txt": "Successfully logged In",
+                        "token": token.decode('UTF-8')}
             else:
                 return {"txt": "Invalid Password"}
         else:

@@ -109,6 +109,12 @@ class Request(Resource):
             return {"txt": "Time must be filled"}
         return response, 201
 
+    @ride_api.doc(security='apikey')
+    @driver_required
+    def get(self, ride_id):
+        response = rides.get_all_requests(ride_id)
+        return response, 200
+
 
 class Response(Resource):
     """Contains Response to ride requests"""
@@ -133,3 +139,5 @@ ride_api.add_resource(Rides, "/rides")
 ride_api.add_resource(Ride, "/rides/<int:ride_id>")
 ride_api.add_resource(Request, "/rides/<int:ride_id>/requests")
 ride_api.add_resource(Response, "/rides/<int:ride_id>/requests/<int:request_id>")
+ride_api.add_resource(Request, "/rides/<int:ride_id>/requests")
+

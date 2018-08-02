@@ -2,6 +2,7 @@ from flask import Flask
 from flask_restplus import Api
 from instance.config import app_config
 from instance.config import config
+from flask_cors import CORS
 import psycopg2
 import os
 
@@ -25,6 +26,8 @@ def create_app(config_name):
     app.config.from_object(app_config[config_name])
     app.config.from_pyfile('config.py')
     app.url_map.strict_slashes = False
+
+    CORS(app)
 
     from resources.rides import ride_api
     api.add_namespace(ride_api, path="/api/v2")
