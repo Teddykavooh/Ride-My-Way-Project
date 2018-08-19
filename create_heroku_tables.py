@@ -9,7 +9,8 @@ create_tables()
 
 """Creates Admin On Default"""
 
-conn = psycopg2.connect(os.getenv('Db'))
+conn = psycopg2.connect(database=os.getenv('Db'), host=os.getenv('host'), user=os.getenv('user'),
+                        password=os.getenv('password'))
 cur = conn.cursor()
 hidden = generate_password_hash("teddy0725143787")
 query = "INSERT INTO users (username, email, password, driver, admin) VALUES " "('" + 'Antony Kavooh' "'," \

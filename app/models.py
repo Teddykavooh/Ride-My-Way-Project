@@ -16,13 +16,14 @@ def create_tables():
             ride_id SERIAL PRIMARY KEY,
             driver VARCHAR(255)NOT NULL,
             route VARCHAR(250) NOT NULL,
-            time VARCHAR(10) NOT NULL
+            time VARCHAR(10) NOT NULL,
+            FOREIGN KEY (driver) REFERENCES users (username) ON DELETE CASCADE 
         )
         """,
         """ CREATE TABLE users (
                 user_id SERIAL PRIMARY KEY,
                 username VARCHAR(255) NOT NULL,
-                email VARCHAR(255) NOT NULL,
+                email VARCHAR(255) NOT NULL UNIQUE,
                 password VARCHAR(500) NOT NULL,
                 driver BOOLEAN NULL,
                 admin BOOLEAN NULL
@@ -32,16 +33,19 @@ def create_tables():
         CREATE TABLE requests (
                 request_id SERIAL PRIMARY KEY,
                 ride_id VARCHAR(50) NOT NULL,
-                passenger_name VARCHAR(255) NOT NULL UNIQUE,
+                passenger_name VARCHAR(255) NOT NULL,
                 pick_up_station VARCHAR(255) NOT NULL,
                 time VARCHAR(10) NOT NULL,
-                response VARCHAR(10)
+                response VARCHAR(10),
+                FOREIGN KEY (passenger_name) REFERENCES users (username) ON DELETE CASCADE,
+                FOREIGN KEY (ride_id) REFERENCES rides (ride_id) ON DELETE CASCADE 
         )
         """)
     conn = None
     try:
         parameters = config()
-        conn = psycopg2.connect(os.getenv('Db'))
+        conn = psycopg2.connect(database=os.getenv('Db'), host=os.getenv('host'), user=os.getenv('user'),
+                                password=os.getenv('password'))
         cur = conn.cursor()
         for command in commands:
             cur.execute(command)
@@ -57,7 +61,8 @@ def create_tables():
 class Rides:
     """Ride's Functionality"""
     def get_all_rides(self):
-        conn = psycopg2.connect(os.getenv('Db'))
+        conn = conn = psycopg2.connect(database=os.getenv('Db'), host=os.getenv('host'), user=os.getenv('user'),
+                                       password=os.getenv('password'))
         cur = conn.cursor()
         cur.execute("SELECT ride_id, driver, route, time FROM rides ORDER BY ride_id")
         rides = cur.fetchall()
@@ -73,7 +78,8 @@ class Rides:
             return all_rides
 
     def get_a_ride(self, ride_id):
-        conn = psycopg2.connect(os.getenv('Db'))
+        conn = psycopg2.connect(database=os.getenv('Db'), host=os.getenv('host'), user=os.getenv('user'),
+                                password=os.getenv('password'))
         cur = conn.cursor()
         cur.execute("SELECT * FROM rides")
         rides = cur.fetchall()
@@ -89,7 +95,8 @@ class Rides:
             return {"txt": "Ride not available"}
 
     def post_a_ride(self, driver, route, time):
-        conn = psycopg2.connect(os.getenv('Db'))
+        conn = psycopg2.connect(database=os.getenv('Db'), host=os.getenv('host'), user=os.getenv('user'),
+                                password=os.getenv('password'))
         cur = conn.cursor()
         query = "INSERT INTO rides (driver, route, time) VALUES " \
                 "('" + driver + "', '" + route + "', '" + time + "')"
@@ -99,7 +106,8 @@ class Rides:
         return {"txt": "Ride Added"}
 
     def delete_a_ride(self, ride_id):
-        conn = psycopg2.connect(os.getenv('Db'))
+        conn = psycopg2.connect(database=os.getenv('Db'), host=os.getenv('host'), user=os.getenv('user'),
+                                password=os.getenv('password'))
         cur = conn.cursor()
         cur.execute("SELECT * FROM rides")
         rides = cur.fetchall()
@@ -116,7 +124,8 @@ class Rides:
             return {"txt": "Ride not available"}
 
     def edit(self, ride_id, driver, route, time):
-        conn = psycopg2.connect(os.getenv('Db'))
+        conn = psycopg2.connect(database=os.getenv('Db'), host=os.getenv('host'), user=os.getenv('user'),
+                                password=os.getenv('password'))
         cur = conn.cursor()
         cur.execute("SELECT * FROM rides")
         rides = cur.fetchall()
@@ -134,7 +143,8 @@ class Rides:
             return {"txt": "Ride not available"}
 
     def request_to_join_a_ride(self, ride_id, passenger_name, pick_up_station, time):
-        conn = psycopg2.connect(os.getenv('Db'))
+        conn = psycopg2.connect(database=os.getenv('Db'), host=os.getenv('host'), user=os.getenv('user'),
+                                password=os.getenv('password'))
         cur = conn.cursor()
         cur.execute("SELECT * FROM rides")
         rides = cur.fetchall()
@@ -158,7 +168,8 @@ class Rides:
     def accept_or_reject_a_ride_request(self, ride_id, request_id, response):
         responses = ["Accepted", "Rejected"]
         if response in responses:
-            conn = psycopg2.connect(os.getenv('Db'))
+            conn = psycopg2.connect(database=os.getenv('Db'), host=os.getenv('host'), user=os.getenv('user'),
+                                    password=os.getenv('password'))
             cur = conn.cursor()
             cur.execute("SELECT * FROM requests")
             requests = cur.fetchall()
@@ -183,7 +194,8 @@ class Rides:
             return {"txt": "Response should be either Accepted or Rejected"}
 
     def get_all_requests(self, ride_id):
-        conn = psycopg2.connect(os.getenv('Db'))
+        conn = psycopg2.connect(database=os.getenv('Db'), host=os.getenv('host'), user=os.getenv('user'),
+                                password=os.getenv('password'))
         cur = conn.cursor()
         cur.execute("SELECT * FROM requests ")
         requests = cur.fetchall()
@@ -206,7 +218,8 @@ class Rides:
 class Users:
     """Users Functionality"""
     def get_all_users(self):
-        conn = psycopg2.connect(os.getenv('Db'))
+        conn = psycopg2.connect(database=os.getenv('Db'), host=os.getenv('host'), user=os.getenv('user'),
+                                password=os.getenv('password'))
         cur = conn.cursor()
         cur.execute("SELECT * FROM users ORDER BY user_id")
         users = cur.fetchall()
@@ -225,7 +238,8 @@ class Users:
         """Creates new user"""
         driver_mode = ["True", "False"]
         if driver in driver_mode:
-            conn = psycopg2.connect(os.getenv('Db'))
+            conn = psycopg2.connect(database=os.getenv('Db'), host=os.getenv('host'), user=os.getenv('user'),
+                                    password=os.getenv('password'))
             cur = conn.cursor()
             cur.execute("SELECT email from users")
             conn.commit()
@@ -240,6 +254,7 @@ class Users:
                 hidden = generate_password_hash(password=password)
                 query = "INSERT INTO users (username, email, password, driver, admin) VALUES "\
                         "('" + username + "', '" + email + "', '" + hidden + "', '" + driver + "', '" + '0' + "')"
+                print(query)
                 cur.execute(query)
                 conn.commit()
                 cur.close()
@@ -247,20 +262,18 @@ class Users:
         else:
             return {"txt": "Driver must either be True or False"}, 400
 
-    def login(self, username, password):
-        conn = psycopg2.connect(os.getenv('Db'))
+    def login(self, email, password):
+        conn = psycopg2.connect(database=os.getenv('Db'), host=os.getenv('host'), user=os.getenv('user'),
+                                password=os.getenv('password'))
         cur = conn.cursor()
-        cur.execute("SELECT username, password, driver, admin from users")
+        cur.execute("SELECT username, email, password, driver, admin from users where email='{}'".format(email))
         conn.commit()
-        table_users = cur.fetchall()
-        looping_db = {}
-        for data_in_db in table_users:
-            my_data = data_in_db[0]
-            looping_db[my_data] = {"password": data_in_db[1], "driver": data_in_db[2], "admin": data_in_db[3]}
-        if username in looping_db:
-            if check_password_hash(looping_db[username]["password"], password=password):
-                token = jwt.encode({"username": username, "driver": looping_db[username]["driver"],
-                                    "admin": looping_db[username]["admin"],
+        row = cur.fetchone()
+        # print(row)
+        if email in row:
+            if check_password_hash(row[2], password=password):
+                token = jwt.encode({"username": row[0], "driver": row[3],
+                                    "admin": row[4],
                                     "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=2)},
                                    os.getenv('SECRET_KEY'))
                 return {"txt": "Successfully logged In",
@@ -268,22 +281,21 @@ class Users:
             else:
                 return {"txt": "Invalid Password"}
         else:
-            return {"txt": "Invalid Username"}
+            return {"txt": "Invalid Email"}
 
     def delete_a_user(self, user_id):
-        conn = psycopg2.connect(os.getenv('Db'))
+        conn = psycopg2.connect(database=os.getenv('Db'), host=os.getenv('host'), user=os.getenv('user'),
+                                password=os.getenv('password'))
         cur = conn.cursor()
-        cur.execute("SELECT * from users")
+        cur.execute("SELECT * from users where user_id='{}'".format(user_id))
         conn.commit()
-        table_users = cur.fetchall()
-        looping_db = {}
-        for data_in_db in table_users:
-            my_data = data_in_db[0]
-            looping_db[my_data] = {}
-        if user_id in looping_db:
+        row = cur.fetchone()
+        if user_id == 1:
+            return {"txt": "SuperAdmin can't be deleted."}
+        if row is None:
+            return {"txt": "User Not Available"}
+        else:
             cur.execute("DELETE FROM users WHERE user_id = %s", (user_id,))
             conn.commit()
-        else:
-            return {"txt": "User Not Available"}
-        cur.close()
-        return {"txt": "User Deleted"}
+            cur.close()
+            return {"txt": "User Deleted"}

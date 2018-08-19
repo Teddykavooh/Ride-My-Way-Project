@@ -44,7 +44,8 @@ def connect():
     try:
         parameters = config()
         print('Connecting to the PostgreSQL database...')
-        conn = psycopg2.connect(os.getenv('Db'))
+        conn = psycopg2.connect(database=os.getenv('Db'), host=os.getenv('host'), user=os.getenv('user'),
+                                password=os.getenv('password'))
         cur = conn.cursor()
         print('PostgreSQL database version:')
         cur.execute('SELECT version()')

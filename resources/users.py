@@ -8,7 +8,7 @@ user_register = user_api.model("Register A User", {"username": fields.String,
                                                    "email": fields.String,
                                                    "password": fields.String,
                                                    "driver": fields.String})
-user_login = user_api.model("Login User", {"username": fields.String,
+user_login = user_api.model("Login User", {"email": fields.String,
                                            "password": fields.String})
 
 
@@ -44,12 +44,12 @@ class Login(Resource):
     @user_api.expect(user_login)
     def post(self):
         parser = reqparse.RequestParser()
-        parser.add_argument("username", type=str, help="Username must be provided", required=True,
+        parser.add_argument("email", type=str, help="Username must be provided", required=True,
                             location=["json"])
         parser.add_argument("password", type=str, help="Password must be provided", location=["json"],
                             required=True)
         args = parser.parse_args()
-        response = user.login(username=args["username"], password=args["password"])
+        response = user.login(email=args["email"], password=args["password"])
         return response, 200
 
 

@@ -28,7 +28,8 @@ class ConfigTestCase(unittest.TestCase):
             user.register("Honeybunch Kaindu", "kaindu@gmail.com", "1440", "False", False)
 
             """Admin Creation"""
-            conn = psycopg2.connect(os.getenv('Db'))
+            conn = psycopg2.connect(database=os.getenv('Db'), host=os.getenv('host'), user=os.getenv('user'),
+                                    password=os.getenv('password'))
             cur = conn.cursor()
             hidden = generate_password_hash("teddy0725143787")
 
@@ -38,7 +39,8 @@ class ConfigTestCase(unittest.TestCase):
             conn.commit()
 
             """Driver Creation"""
-            conn = psycopg2.connect(os.getenv('Db'))
+            conn = psycopg2.connect(database=os.getenv('Db'), host=os.getenv('host'), user=os.getenv('user'),
+                                    password=os.getenv('password'))
             cur = conn.cursor()
             hidden = generate_password_hash("123")
 
@@ -48,7 +50,8 @@ class ConfigTestCase(unittest.TestCase):
             conn.commit()
 
             """User Creation"""
-            conn = psycopg2.connect(os.getenv('Db'))
+            conn = psycopg2.connect(database=os.getenv('Db'), host=os.getenv('host'), user=os.getenv('user'),
+                                    password=os.getenv('password'))
             cur = conn.cursor()
             hidden = generate_password_hash("456")
 
@@ -86,7 +89,8 @@ class ConfigTestCase(unittest.TestCase):
     def tearDown(self):
         """Deletes all test related data"""
         with self.app.app_context():
-            conn = psycopg2.connect(os.getenv('Db'))
+            conn = psycopg2.connect(database=os.getenv('Db'), host=os.getenv('host'), user=os.getenv('user'),
+                                    password=os.getenv('password'))
             cur = conn.cursor()
             cur.execute("DROP TABLE users, rides, requests;")
             conn.commit()
