@@ -19,13 +19,13 @@ class ConfigTestCase(unittest.TestCase):
         with self.app.app_context():
             create_tables()
 
-            ride = Rides()
-            ride.post_a_ride("Lewis Liu", "Meru - Embu", "6:30pm")
-            ride.post_a_ride("Tedd", "Timba - Head", "5:30pm")
-
             user = Users()
             user.register("Elneny Mohah", "mohah@gmail.com", "01234", "True", False)
             user.register("Honeybunch Kaindu", "kaindu@gmail.com", "1440", "False", False)
+
+            ride = Rides()
+            ride.post_a_ride("Elneny Mohah", "Meru - Embu", "6:30pm")
+            ride.post_a_ride("Elneny Mohah", "Timba - Head", "5:30pm")
 
             """Admin Creation"""
             conn = psycopg2.connect(database=os.getenv('Db'), host=os.getenv('host'), user=os.getenv('user'),
@@ -34,7 +34,7 @@ class ConfigTestCase(unittest.TestCase):
             hidden = generate_password_hash("teddy0725143787")
 
             query = "INSERT INTO users (username, email, password, driver, admin) VALUES " \
-                    "('Teddy Kavooh', 'teddykavooh@gmail.com', '" + hidden + "', '" + '1' + "', '" + '1' + "')"
+                    "('Teddy Kavooh', 'teddykavooh@gmail.com', '" + hidden + "', '1', '1')"
             cur.execute(query)
             conn.commit()
 
@@ -45,7 +45,7 @@ class ConfigTestCase(unittest.TestCase):
             hidden = generate_password_hash("123")
 
             query = "INSERT INTO users (username, email, password, driver, admin) VALUES " \
-                    "('Hola Delmonte', 'hola@gmail.com', '" + hidden + "', '" + '1' + "','" + '0' + "' )"
+                    "('Hola Delmonte', 'hola@gmail.com', '" + hidden + "', '1', '0')"
             cur.execute(query)
             conn.commit()
 
@@ -56,16 +56,16 @@ class ConfigTestCase(unittest.TestCase):
             hidden = generate_password_hash("456")
 
             query = "INSERT INTO users (username, email, password, driver, admin) VALUES " \
-                    "('User Pele', 'user@gmail.com', '" + hidden + "', '" + '0' + "','" + '0' + "' )"
+                    "('User Pele', 'user@gmail.com', '" + hidden + "', '0','0')"
             cur.execute(query)
             conn.commit()
 
             """Getting Tokens"""
             """User Login"""
 
-            test_admin = {"username": "Teddy Kavooh", "password": "teddy0725143787"}
-            test_driver = {"username": "Hola Delmonte", "password": "123"}
-            test_user = {"username": "User Pele", "password": "456"}
+            test_admin = {"email": "teddykavooh@gmail.com", "password": "teddy0725143787"}
+            test_driver = {"email": "hola@gmail.com", "password": "123"}
+            test_user = {"email": "user@gmail.com", "password": "456"}
 
             admin_response = self.client().post('/api/v2/users/login', data=json.dumps(test_admin),
                                                 content_type='application/json')
@@ -89,10 +89,12 @@ class ConfigTestCase(unittest.TestCase):
     def tearDown(self):
         """Deletes all test related data"""
         with self.app.app_context():
+
             conn = psycopg2.connect(database=os.getenv('Db'), host=os.getenv('host'), user=os.getenv('user'),
                                     password=os.getenv('password'))
             cur = conn.cursor()
-            cur.execute("DROP TABLE users, rides, requests;")
+            query = "DROP TABLE requests, rides, users;"
+            cur.execute(query)
             conn.commit()
 
 

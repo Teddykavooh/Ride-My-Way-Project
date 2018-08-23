@@ -44,7 +44,7 @@ class Login(Resource):
     @user_api.expect(user_login)
     def post(self):
         parser = reqparse.RequestParser()
-        parser.add_argument("email", type=str, help="Username must be provided", required=True,
+        parser.add_argument("email", type=str, help="Email must be provided", required=True,
                             location=["json"])
         parser.add_argument("password", type=str, help="Password must be provided", location=["json"],
                             required=True)

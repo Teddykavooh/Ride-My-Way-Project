@@ -19,7 +19,7 @@ class RequestsTests(ConfigTestCase):
 
     def test_request_to_join_a_ride(self):
         """Test for requesting to join a ride"""
-        ride = {"passenger_name": "Teddy Antony", "pick_up_station": "Kwa Ndeti", "time": "9:30am"}
+        ride = {"passenger_name": "Honeybunch Kaindu", "pick_up_station": "Kwa Ndeti", "time": "9:30am"}
         response = self.client().post("/api/v2/rides/1/requests", data=json.dumps(ride),
                                       content_type='application/json', headers=self.user_header)
         self.assertIn("Ride Requested", str(response.data))
@@ -27,7 +27,7 @@ class RequestsTests(ConfigTestCase):
 
     def test_request_to_join_a_ride_not_in_db(self):
         """Test for requesting to join a ride"""
-        ride = {"passenger_name": "Teddy Antony", "pick_up_station": "Kwa Ndeti", "time": "9:30am"}
+        ride = {"passenger_name": "Honeybunch Kaindu", "pick_up_station": "Kwa Ndeti", "time": "9:30am"}
         response = self.client().post("/api/v2/rides/99/requests", data=json.dumps(ride),
                                       content_type='application/json', headers=self.user_header)
         self.assertIn("Ride does not exist", str(response.data))

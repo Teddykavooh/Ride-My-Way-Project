@@ -26,7 +26,7 @@ class RideTests(ConfigTestCase):
 
     def test_post_a_ride(self):
         """Test for adding a ride"""
-        ride = {"driver": "Denno Kindu", "route": "Mlosi - Junction", "time": "7:30pm"}
+        ride = {"driver": "Elneny Mohah", "route": "Mlosi - Junction", "time": "7:30pm"}
         response = self.client().post("/api/v2/rides", data=json.dumps(ride), content_type='application/json',
                                       headers=self.driver_header)
         self.assertIn("Ride Added", str(response.data))
@@ -41,7 +41,7 @@ class RideTests(ConfigTestCase):
 
     def test_edit(self):
         """Test API can edit rides"""
-        ride = {"driver": "Denno Kindu", "route": "Mlosi - Junction", "time": "7:30pm"}
+        ride = {"driver": "Elneny Mohah", "route": "Mlosi - Junction", "time": "7:30pm"}
         response = self.client().put("/api/v2/rides/1", data=json.dumps(ride), content_type='application/json',
                                      headers=self.driver_header)
         self.assertIn("Ride Edited", str(response.data))

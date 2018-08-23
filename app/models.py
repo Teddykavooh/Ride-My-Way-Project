@@ -12,33 +12,33 @@ def create_tables():
     """ Create tables in the PostgreSQL database"""
     commands = (
         """
-        CREATE TABLE rides (
-            ride_id SERIAL PRIMARY KEY,
-            driver VARCHAR(255)NOT NULL,
-            route VARCHAR(250) NOT NULL,
-            time VARCHAR(10) NOT NULL,
-            FOREIGN KEY (driver) REFERENCES users (username) ON DELETE CASCADE 
+        CREATE TABLE users (
+            user_id SERIAL PRIMARY KEY,
+            username VARCHAR(255) UNIQUE NOT NULL,
+            email VARCHAR(255) NOT NULL,
+            password VARCHAR(500) NOT NULL,
+            driver BOOLEAN NULL,
+            admin BOOLEAN NULL
         )
         """,
-        """ CREATE TABLE users (
-                user_id SERIAL PRIMARY KEY,
-                username VARCHAR(255) NOT NULL,
-                email VARCHAR(255) NOT NULL UNIQUE,
-                password VARCHAR(500) NOT NULL,
-                driver BOOLEAN NULL,
-                admin BOOLEAN NULL
+        """ CREATE TABLE rides (
+                ride_id SERIAL PRIMARY KEY,
+                driver VARCHAR(255) NOT NULL,
+                route VARCHAR(255) NOT NULL,
+                time VARCHAR(10) NOT NULL,
+                FOREIGN KEY (driver) REFERENCES users (username) ON UPDATE CASCADE ON DELETE CASCADE
                 )
         """,
         """
         CREATE TABLE requests (
                 request_id SERIAL PRIMARY KEY,
-                ride_id VARCHAR(50) NOT NULL,
+                ride_id  INT NOT NULL,
                 passenger_name VARCHAR(255) NOT NULL,
                 pick_up_station VARCHAR(255) NOT NULL,
                 time VARCHAR(10) NOT NULL,
                 response VARCHAR(10),
-                FOREIGN KEY (passenger_name) REFERENCES users (username) ON DELETE CASCADE,
-                FOREIGN KEY (ride_id) REFERENCES rides (ride_id) ON DELETE CASCADE 
+                FOREIGN KEY (ride_id) REFERENCES rides (ride_id) ON UPDATE CASCADE ON DELETE CASCADE,
+                FOREIGN KEY (passenger_name) REFERENCES users (username) ON UPDATE CASCADE ON DELETE CASCADE
         )
         """)
     conn = None
@@ -49,7 +49,7 @@ def create_tables():
         cur = conn.cursor()
         for command in commands:
             cur.execute(command)
-        conn.commit()
+            conn.commit()
         cur.close()
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
@@ -61,21 +61,40 @@ def create_tables():
 class Rides:
     """Ride's Functionality"""
     def get_all_rides(self):
-        conn = conn = psycopg2.connect(database=os.getenv('Db'), host=os.getenv('host'), user=os.getenv('user'),
-                                       password=os.getenv('password'))
+        conn = psycopg2.connect(database=os.getenv('Db'), host=os.getenv('host'), user=os.getenv('user'),
+                                password=os.getenv('password'))
         cur = conn.cursor()
-        cur.execute("SELECT ride_id, driver, route, time FROM rides ORDER BY ride_id")
+        cur.execute('SELECT ride_id,driver, route, time FROM rides ORDER BY ride_id')
         rides = cur.fetchall()
-        all_rides = {}
+        the_list = []
         for ride in rides:
+            all_rides = {}
             my_data = ride[0]
-            all_rides[my_data] = {"driver": ride[1], "route": ride[2], "time": ride[3]}
-        if all_rides == {}:
+            my_data1 = ride[1]
+            my_data2 = ride[2]
+            my_data3 = ride[3]
+            all_rides["ride_id"] = my_data
+            all_rides["driver"] = my_data1
+            all_rides["route"] = my_data2
+            all_rides["time"] = my_data3
+            the_list.append(all_rides)
+            # the_list.append(my_data)
+            # the_list.append(my_data1)
+            # the_list.append(my_data2)
+            # the_list.append(my_data3)
+            # all_rides[my_data] = {"driver": ride[1], "route": ride[2], "time": ride[3]}
+        # if all_rides == {}:
+        #     return {"txt": "No rides are available"}
+        # else:
+        #     conn.commit()
+        #     cur.close()
+        #     return all_rides
+        if the_list is None:
             return {"txt": "No rides are available"}
         else:
             conn.commit()
             cur.close()
-            return all_rides
+            return the_list
 
     def get_a_ride(self, ride_id):
         conn = psycopg2.connect(database=os.getenv('Db'), host=os.getenv('host'), user=os.getenv('user'),
@@ -146,24 +165,25 @@ class Rides:
         conn = psycopg2.connect(database=os.getenv('Db'), host=os.getenv('host'), user=os.getenv('user'),
                                 password=os.getenv('password'))
         cur = conn.cursor()
-        cur.execute("SELECT * FROM rides")
-        rides = cur.fetchall()
-        all_rides = {}
-        for ride in rides:
-            my_data = ride[0]
-            all_rides[my_data] = {"driver": ride[1], "route": ride[2], "time": ride[3]}
-            # if my_data in all_rides:
-            #     return {"txt": "You can't request more rides"}
-            # else:
-            if ride_id in all_rides:
-                sql = """ INSERT INTO requests(ride_id, passenger_name, pick_up_station, time)
-                 VALUES(%s, %s, %s, %s) RETURNING ride_id, passenger_name, pick_up_station, time;"""
-                cur.execute(sql, (ride_id, passenger_name, pick_up_station, time))
-                conn.commit()
-                cur.close()
-                return {"txt": "Ride Requested"}
-            else:
-                return {"txt": "Ride does not exist"}
+        cur.execute("SELECT * from rides where ride_id='{}'".format(ride_id))
+        row = cur.fetchone()
+        # all_rides = {}
+        # for ride in rides:
+        #     my_data = ride[0]
+        #     all_rides[my_data] = {"driver": ride[1], "route": ride[2], "time": ride[3]}
+        #     if my_data in all_rides:
+        #         return {"txt": "You can't request more rides"}
+        #     else:
+        # print(row)
+        if row is None:
+            return {"txt": "Ride does not exist"}
+        else:
+            sql = """ INSERT INTO requests(ride_id, passenger_name, pick_up_station, time)
+             VALUES(%s, %s, %s, %s) RETURNING ride_id, passenger_name, pick_up_station, time;"""
+            cur.execute(sql, (ride_id, passenger_name, pick_up_station, time))
+            conn.commit()
+            cur.close()
+            return {"txt": "Ride Requested"}
 
     def accept_or_reject_a_ride_request(self, ride_id, request_id, response):
         responses = ["Accepted", "Rejected"]
@@ -269,8 +289,9 @@ class Users:
         cur.execute("SELECT username, email, password, driver, admin from users where email='{}'".format(email))
         conn.commit()
         row = cur.fetchone()
-        # print(row)
-        if email in row:
+        if row is None:
+            return {"txt": "Invalid Email"}
+        else:
             if check_password_hash(row[2], password=password):
                 token = jwt.encode({"username": row[0], "driver": row[3],
                                     "admin": row[4],
@@ -280,8 +301,6 @@ class Users:
                         "token": token.decode('UTF-8')}
             else:
                 return {"txt": "Invalid Password"}
-        else:
-            return {"txt": "Invalid Email"}
 
     def delete_a_user(self, user_id):
         conn = psycopg2.connect(database=os.getenv('Db'), host=os.getenv('host'), user=os.getenv('user'),

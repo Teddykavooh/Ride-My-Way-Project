@@ -68,20 +68,21 @@ class UserTests(ConfigTestCase):
 
     def test_login(self):
         """We are testing user login"""
-        user = {"username": "Mutisya Luke", "password": "5678"}
+        user = {"email": "kaindu@gmail.com", "password": "1440"}
         response = self.client().post("/api/v2/users/login", data=json.dumps(user), content_type='application/json')
+        self.assertIn("Successfully logged In", str(response.data))
         self.assertEqual(response.status_code, 200)
 
-    def test_invalid_username(self):
-        """We are testing response to invalid username"""
-        user = {"username": "Mue Kavoo", "password": "5678"}
+    def test_invalid_email(self):
+        """We are testing response to invalid email"""
+        user = {"email": "muenikavoo@gmail.com", "password": "5678"}
         response = self.client().post("/api/v2/users/login", data=json.dumps(user), content_type='application/json')
-        self.assertIn("Invalid Username", str(response.data))
+        self.assertIn("Invalid Email", str(response.data))
         self.assertEqual(response.status_code, 200)
 
     def test_invalid_password(self):
-        """We are testing response to invalid username"""
-        user = {"username": "Elneny Mohah", "password": "34"}
+        """We are testing response to invalid password"""
+        user = {"email": "mohah@gmail.com", "password": "34"}
         response = self.client().post("/api/v2/users/login", data=json.dumps(user), content_type='application/json')
         self.assertIn("Invalid Password", str(response.data))
         self.assertEqual(response.status_code, 200)

@@ -15,7 +15,7 @@ def create_app(config_name):
     api = Api(app=app,
               description="Ride-my App is a carpooling application that "
                           "provides drivers with the ability to" 
-                          " create ride oﬀers  and passengers  "
+                          " create ride oﬀers  and passengers  "
                           "to join available ride oﬀers.",
               title="Ride-My-Way",
               version='1.0',
